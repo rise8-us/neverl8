@@ -6,8 +6,8 @@ Prerequisites
 
 Before you begin, ensure you have the following installed on your machine:
 
-Go programming language (version 1.16 or higher)
-PostgreSQL database
+Go programming language (version 1.16 or higher),
+PostgreSQL database,
 Git
 
 Installation:
