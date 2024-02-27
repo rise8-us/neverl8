@@ -7,15 +7,8 @@ import (
 	"os/signal"
 
 	"github.com/drewfugate/neverl8/application"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
-
-// Define a model
-type User struct {
-	gorm.Model
-	Name string
-}
 
 func main() {
 	// Start app
