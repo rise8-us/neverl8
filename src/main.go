@@ -18,7 +18,7 @@ type User struct {
 }
 
 func main() {
-	// Start app9
+	// Start app
 	app := application.New()
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
