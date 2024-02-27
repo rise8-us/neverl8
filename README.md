@@ -1,4 +1,5 @@
-neverl8 GO Application
+neverl8
+
 This is a simple Go application built with Go-Chi router and GORM ORM, demonstrating basic CRUD operations with PostgreSQL.
 
 Prerequisites
