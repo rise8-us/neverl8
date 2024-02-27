@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -18,6 +21,16 @@ type User struct {
 }
 
 func main() {
+	app := application.New()
+
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
+	err := app.Start(ctx)
+	if err != nil {
+		fmt.Println("failed to start app: ", err)
+	}
+
 	// Connect to the database
 	db, err := gorm.Open("postgres", "host=localhost port=5432 user=drewfugate dbname=mydatabase password=password sslmode=disable")
 	if err != nil {
