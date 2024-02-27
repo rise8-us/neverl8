@@ -3,6 +3,7 @@ neverl8
 This is a simple Go application built with Go-Chi router and GORM ORM, demonstrating basic CRUD operations with PostgreSQL.
 
 Prerequisites
+
 Before you begin, ensure you have the following installed on your machine:
 
 Go programming language (version 1.16 or higher)
