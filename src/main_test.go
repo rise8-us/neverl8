@@ -5,21 +5,21 @@ import (
 	"net/http/httptest"
 	"testing"
 
-
+	"github.com/drewfugate/neverl8/handler"
 	"github.com/stretchr/testify/assert"
-	"github.com/drewfugate/neverl8"
 )
 
 func TestHelloWorldEndpoint(t *testing.T) {
-	// Create a new request to the endpoint (assuming it's "/")
+	// Create a new request to the endpoint
 	req, err := http.NewRequest("GET", "/helloworld", nil)
 	assert.NoError(t, err, "should not error creating request")
 
 	// Create a ResponseRecorder to record the response
 	rr := httptest.NewRecorder()
 
-	// Create a handler using your application's router
-	handler := http.HandlerFunc(main.HelloWorldHandler)
+	// Create a handler using the router
+	hello := &handler.Hello{}
+	handler := http.HandlerFunc(hello.HelloWorldHandler)
 
 	// Serve the HTTP request to the handler
 	handler.ServeHTTP(rr, req)

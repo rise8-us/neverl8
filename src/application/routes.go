@@ -1,7 +1,8 @@
 package application
 
 import (
-	"net/http"
+	"github.com/drewfugate/neverl8/handler"
+	hello "github.com/drewfugate/neverl8/repository"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -12,22 +13,26 @@ func (a *App) loadRoutes() {
 
 	router.Use(middleware.Logger)
 
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	})
+	hello := &handler.Hello{
+		Repo: &hello.PostgresRepo{
+			DB: a.db,
+		},
+	}
 
-	router.Route("/orders", a.loadOrderRoutes)
+	router.Get("/helloworld", hello.HelloWorldHandler)
+
+	// router.Route("/helloworld", hello.HelloWorldHandler)
 
 	a.router = router
 }
 
-func (a *App) loadOrderRoutes(router chi.Router) {
-	helloWorldHandler := &handler.Hello{
-		Repo: &handler.RedisRepo{
-			Client: a.rdb,
-		},
-	}
+// func (a *App) loadOrderRoutes(router chi.Router) {
+// 	hello := &handler.Hello{
+// 		Repo: &hello.PostgresRepo{
+// 			DB: a.db,
+// 		},
+// 	}
 
-	// router.Post("/", orderHandler.Create)
-	router.Get("/helloworld", helloWorldHandler)
-}
+// 	// router.Post("/", orderHandler.Create)
+// 	router.Get("/helloworld", hello.HelloWorldHandler)
+// }

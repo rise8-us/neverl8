@@ -1,6 +1,10 @@
 package handler
 
-import "net/http"
+import (
+	"net/http"
+
+	hello "github.com/drewfugate/neverl8/repository"
+)
 
 type Hello struct {
 	Repo *hello.PostgresRepo
