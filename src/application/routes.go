@@ -21,18 +21,5 @@ func (a *App) loadRoutes() {
 
 	router.Get("/helloworld", hello.HelloWorldHandler)
 
-	// router.Route("/helloworld", hello.HelloWorldHandler)
-
 	a.router = router
 }
-
-// func (a *App) loadOrderRoutes(router chi.Router) {
-// 	hello := &handler.Hello{
-// 		Repo: &hello.PostgresRepo{
-// 			DB: a.db,
-// 		},
-// 	}
-
-// 	// router.Post("/", orderHandler.Create)
-// 	router.Get("/helloworld", hello.HelloWorldHandler)
-// }
