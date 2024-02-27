@@ -35,7 +35,7 @@ func (a *App) Start(ctx context.Context) error {
 	}
 
 	// Connect to the database
-	db, err := gorm.Open("postgres", "host=localhost port=5432 user=drewfugate dbname=mydatabase password=password sslmode=disable")
+	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=mydatabase password=password sslmode=disable")
 	if err != nil {
 		return fmt.Errorf("failed to connect to the database: %v", err)
 	}
