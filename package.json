@@ -2,7 +2,7 @@
   "name": "neverl8",
   "version": "1.0.0",
   "description": "**neverl8** is a streamlined Go application utilizing the Go-Chi router, GORM ORM, showcasing calendar operations within a PostgreSQL environment. Designed for simplicity and efficiency, this project will serve as the essential scheduler for Rise8.",
-  "main": "commitlint.config.js",
+  "main": "main.go",
   "scripts": {
     "test": "go test ./..."
   },
@@ -10,13 +10,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^19.0.3",
+    "@commitlint/config-conventional": "^19.0.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^9.2.6",
     "semantic-release": "^23.0.2"
   },
   "release": {
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
@@ -25,7 +29,9 @@
       [
         "@semantic-release/git",
         {
-          "assets": ["CHANGELOG.md"],
+          "assets": [
+            "CHANGELOG.md"
+          ],
           "message": "chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
         }
       ]
