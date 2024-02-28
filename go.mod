@@ -1,4 +1,4 @@
-module github.com/drewfugate/neverl8
+module github.com/rise8-us/neverl8
 
 go 1.22.0
 

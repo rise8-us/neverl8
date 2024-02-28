@@ -7,10 +7,10 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/drewfugate/neverl8/model"
-	"github.com/drewfugate/neverl8/repository"
-	"github.com/drewfugate/neverl8/service"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/rise8-us/neverl8/model"
+	"github.com/rise8-us/neverl8/repository"
+	"github.com/rise8-us/neverl8/service"
 )
 
 func TestCreateMeeting(t *testing.T) {
@@ -38,7 +38,7 @@ func TestCreateMeeting(t *testing.T) {
 	assert.NoError(t, err, "expected no error")
 
 	// Assert that the created meeting matches the input meeting
-	assert.NotNil(t, createdMeeting, "expected meeting to be createds")
+	assert.NotNil(t, createdMeeting, "expected meeting to be created")
 	assert.Equal(t, meeting.Calendar, createdMeeting.Calendar, "expected calendar to match")
 	assert.Equal(t, meeting.Duration, createdMeeting.Duration, "expected duration to match")
 	assert.Equal(t, meeting.Title, createdMeeting.Title, "expected title to match")

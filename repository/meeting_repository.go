@@ -3,8 +3,8 @@ package repository
 import (
 	"github.com/pkg/errors"
 
-	"github.com/drewfugate/neverl8/model"
 	"github.com/jinzhu/gorm"
+	"github.com/rise8-us/neverl8/model"
 )
 
 type MeetingRepository struct {

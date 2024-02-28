@@ -24,7 +24,21 @@ go run main.go
 
 The application should now be running on http://localhost:8080.
 
+## Development Setup
+
+This project uses [pre-commit](https://pre-commit.com/) to manage git hooks. Pre-commit hooks help ensure code quality and consistency.
+
+### Installing Pre-commit
+
+To set up pre-commit on your local machine, follow these steps:
+
+1. Install pre-commit. See the [official installation instructions](https://pre-commit.com/#install).
+2. Clone the repository and navigate into it.
+3. Run `pre-commit install` to set up the git hook scripts.
+
+Now pre-commit will run automatically on `git commit`!
+
 Testing
 
 To run unit tests, execute the following command:
-go test 
+go test

@@ -9,12 +9,12 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/drewfugate/neverl8/cli"
-	"github.com/drewfugate/neverl8/model"
-	"github.com/drewfugate/neverl8/repository"
-	"github.com/drewfugate/neverl8/service"
 	"github.com/go-chi/chi"
 	"github.com/jinzhu/gorm"
+	"github.com/rise8-us/neverl8/cli"
+	"github.com/rise8-us/neverl8/model"
+	"github.com/rise8-us/neverl8/repository"
+	"github.com/rise8-us/neverl8/service"
 )
 
 type App struct {

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/drewfugate/neverl8/model"
-	"github.com/drewfugate/neverl8/service"
+	"github.com/rise8-us/neverl8/model"
+	"github.com/rise8-us/neverl8/service"
 )
 
 type CLI struct {

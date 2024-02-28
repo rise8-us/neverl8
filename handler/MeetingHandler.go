@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/drewfugate/neverl8/model"
-	repository "github.com/drewfugate/neverl8/repository"
 	"github.com/go-chi/chi"
+	"github.com/rise8-us/neverl8/model"
+	repository "github.com/rise8-us/neverl8/repository"
 )
 
 type MeetingHandler struct {
