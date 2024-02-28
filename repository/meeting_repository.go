@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/pkg/errors"
+	"fmt"
 
 	"github.com/jinzhu/gorm"
 	"github.com/rise8-us/neverl8/model"
@@ -17,7 +17,7 @@ func NewMeetingRepository(db *gorm.DB) *MeetingRepository {
 
 func (r *MeetingRepository) CreateMeeting(meeting *model.Meeting) (*model.Meeting, error) {
 	if err := r.DB.Create(meeting).Error; err != nil {
-		return nil, errors.Wrap(err, "failed to create meeting")
+		return nil, fmt.Errorf("failed to create meeting: %w", err)
 	}
 	return meeting, nil
 }
@@ -28,21 +28,21 @@ func (r *MeetingRepository) GetMeetingByID(id uint) (*model.Meeting, error) {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
-		return nil, errors.Wrap(err, "failed to get meeting by ID")
+		return nil, fmt.Errorf("failed to get meeting by ID: %w", err)
 	}
 	return &meeting, nil
 }
 
 func (r *MeetingRepository) UpdateMeeting(meeting *model.Meeting) error {
 	if err := r.DB.Save(meeting).Error; err != nil {
-		return errors.Wrap(err, "failed to update meeting")
+		return fmt.Errorf("failed to update meeting: %w", err)
 	}
 	return nil
 }
 
 func (r *MeetingRepository) DeleteMeeting(id uint) error {
 	if err := r.DB.Delete(&model.Meeting{}, id).Error; err != nil {
-		return errors.Wrap(err, "failed to delete meeting")
+		return fmt.Errorf("failed to delete meeting: %w", err)
 	}
 	return nil
 }

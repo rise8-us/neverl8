@@ -19,7 +19,7 @@ func TestCreateMeeting(t *testing.T) {
 	repo := repository.NewMeetingRepository(mockDB)
 
 	// Create a new meeting service with the repository
-	service := service.NewMeetingService(repo)
+	serviceInstance := service.NewMeetingService(repo)
 
 	// Mock test data
 	meeting := &model.Meeting{
@@ -32,7 +32,7 @@ func TestCreateMeeting(t *testing.T) {
 	}
 
 	// Call the CreateMeeting function
-	createdMeeting, err := service.CreateMeeting(meeting)
+	createdMeeting, err := serviceInstance.CreateMeeting(meeting)
 
 	// Assert that no error occurred
 	assert.NoError(t, err, "expected no error")
