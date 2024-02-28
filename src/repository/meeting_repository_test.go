@@ -21,10 +21,7 @@ func TestCreateMeeting(t *testing.T) {
 	// Create a new meeting service with the repository
 	service := service.NewMeetingService(repo)
 
-	// // Create a new meeting handler with the service
-	// handler := handler.NewMeetingHandler(repo)
-
-	// Define your test data
+	// Mock test data
 	meeting := &model.Meeting{
 		Calendar:    "Test Calendar",
 		Duration:    60,
@@ -50,7 +47,7 @@ func TestCreateMeeting(t *testing.T) {
 	assert.Equal(t, meeting.HasBotGuest, createdMeeting.HasBotGuest, "expected hasBotGuest to match")
 }
 
-// NewMockDB creates a new instance of MockDB with a gorm.DB embedded
+// NewMockDB creates a new instance the test db
 func NewMockDB() *gorm.DB {
 	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=postgres_test password=password sslmode=disable")
 	if err != nil {
