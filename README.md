@@ -24,9 +24,6 @@ go run main.go
 
 The application should now be running on http://localhost:8080.
 
-Endpoints
-GET /helloworld: Returns a simple "Hello, World!" message.
-
 Testing
 
 To run unit tests, execute the following command:
