@@ -5,7 +5,6 @@ go 1.22.0
 require (
 	github.com/go-chi/chi v1.5.5
 	github.com/jinzhu/gorm v1.9.16
-	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.4
 )
 
