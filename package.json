@@ -21,14 +21,7 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
-            {"path": "build/neverl8", "label": "neverl8 Binary for Linux"}
-          ]
-        }
-      ],
+      "@semantic-release/github",
       [
         "@semantic-release/git",
         {
