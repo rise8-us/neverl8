@@ -17,7 +17,7 @@ func NewMeetingRepository(db *gorm.DB) *MeetingRepository {
 
 func (r *MeetingRepository) CreateMeeting(meeting *model.Meeting) (*model.Meeting, error) {
 	if err := r.DB.Create(meeting).Error; err != nil {
-		return nil, errors.Wrap(err, "failed to create meetings")
+		return nil, errors.Wrap(err, "failed to create meeting")
 	}
 	return meeting, nil
 }

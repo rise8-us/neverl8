@@ -38,7 +38,7 @@ func TestCreateMeeting(t *testing.T) {
 	assert.NoError(t, err, "expected no error")
 
 	// Assert that the created meeting matches the input meeting
-	assert.NotNil(t, createdMeeting, "expected meeting to be created")
+	assert.NotNil(t, createdMeeting, "expected meeting to be createds")
 	assert.Equal(t, meeting.Calendar, createdMeeting.Calendar, "expected calendar to match")
 	assert.Equal(t, meeting.Duration, createdMeeting.Duration, "expected duration to match")
 	assert.Equal(t, meeting.Title, createdMeeting.Title, "expected title to match")
