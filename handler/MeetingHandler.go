@@ -34,7 +34,11 @@ func (h *MeetingHandler) CreateMeeting(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(meeting)
+	if err := json.NewEncoder(w).Encode(meeting); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		log.Printf("Error encoding response: %v", err)
+		return
+	}
 }
 
 func (h *MeetingHandler) GetMeeting(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +60,11 @@ func (h *MeetingHandler) GetMeeting(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(meeting)
+	if err := json.NewEncoder(w).Encode(meeting); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		log.Printf("Error encoding response: %v", err)
+		return
+	}
 }
 
 func (h *MeetingHandler) UpdateMeeting(w http.ResponseWriter, r *http.Request) {
@@ -74,7 +82,11 @@ func (h *MeetingHandler) UpdateMeeting(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(meeting)
+	if err := json.NewEncoder(w).Encode(meeting); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		log.Printf("Error encoding response: %v", err)
+		return
+	}
 }
 
 func (h *MeetingHandler) DeleteMeeting(w http.ResponseWriter, r *http.Request) {
