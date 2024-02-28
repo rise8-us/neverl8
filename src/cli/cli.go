@@ -47,7 +47,7 @@ func (c *CLI) CreateMeetingFromCLI() {
 		HasBotGuest: hasBotGuest,
 	}
 
-	if err := c.meetingService.CreateMeeting(meeting); err != nil {
+	if _, err := c.meetingService.CreateMeeting(meeting); err != nil {
 		fmt.Println("Failed to create meeting:", err)
 		return
 	}

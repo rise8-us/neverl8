@@ -7,28 +7,15 @@ import (
 	"strconv"
 
 	"github.com/drewfugate/neverl8/model"
-	hello "github.com/drewfugate/neverl8/repository"
+	repository "github.com/drewfugate/neverl8/repository"
 	"github.com/go-chi/chi"
 )
 
-type Hello struct {
-	Repo *hello.PostgresRepo
-}
-
 type MeetingHandler struct {
-	meetingRepo *hello.MeetingRepository
+	meetingRepo *repository.MeetingRepository
 }
 
-func (h *Hello) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-
-	_, err := w.Write([]byte("Hello, World!"))
-	if err != nil {
-		http.Error(w, "Failed to write response", http.StatusInternalServerError)
-	}
-}
-
-func NewMeetingHandler(meetingRepo *hello.MeetingRepository) *MeetingHandler {
+func NewMeetingHandler(meetingRepo *repository.MeetingRepository) *MeetingHandler {
 	return &MeetingHandler{meetingRepo}
 }
 
@@ -40,7 +27,7 @@ func (h *MeetingHandler) CreateMeeting(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	if err := h.meetingRepo.CreateMeeting(&meeting); err != nil {
+	if _, err := h.meetingRepo.CreateMeeting(&meeting); err != nil {
 		http.Error(w, "Failed to create meeting", http.StatusInternalServerError)
 		log.Printf("Error creating meeting: %v\n", err)
 		return

@@ -9,6 +9,10 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/drewfugate/neverl8/cli"
+	"github.com/drewfugate/neverl8/model"
+	"github.com/drewfugate/neverl8/repository"
+	"github.com/drewfugate/neverl8/service"
 	"github.com/go-chi/chi"
 	"github.com/jinzhu/gorm"
 )
@@ -43,6 +47,14 @@ func (a *App) Start(ctx context.Context) error {
 
 	a.db = db
 
+	// Automatically create or update database tables based on struct definitions
+	if err := db.AutoMigrate(&model.Meeting{}).Error; err != nil {
+		return fmt.Errorf("failed to auto migrate database: %v", err)
+	}
+
+	// Channel to signal server startup
+	serverStarted := make(chan struct{})
+
 	// Start server
 	go func() {
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -50,7 +62,22 @@ func (a *App) Start(ctx context.Context) error {
 		}
 	}()
 
+	// Wait for the server to start listening
+	go func() {
+		<-serverStarted
+		// Initialize your repository, service, and CLI
+		meetingRepo := repository.NewMeetingRepository(a.db)
+		meetingService := service.NewMeetingService(meetingRepo)
+		cli := cli.NewCLI(meetingService)
+
+		// Call the CreateMeetingFromCLI method
+		cli.CreateMeetingFromCLI()
+	}()
+
 	fmt.Println("Server is running on port 8080")
+
+	// Notify server startup
+	close(serverStarted)
 
 	// Graceful shutdown
 	quit := make(chan os.Signal, 1)

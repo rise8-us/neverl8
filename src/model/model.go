@@ -2,10 +2,6 @@ package model
 
 import "github.com/jinzhu/gorm"
 
-type Hello struct {
-	Hello string
-}
-
 type Meeting struct {
 	gorm.Model
 	Calendar    string `json:"calendar"`

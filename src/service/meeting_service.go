@@ -2,18 +2,18 @@ package service
 
 import (
 	"github.com/drewfugate/neverl8/model"
-	hello "github.com/drewfugate/neverl8/repository"
+	repository "github.com/drewfugate/neverl8/repository"
 )
 
 type MeetingService struct {
-	meetingRepo *hello.MeetingRepository
+	meetingRepo *repository.MeetingRepository
 }
 
-func NewMeetingService(meetingRepo *hello.MeetingRepository) *MeetingService {
+func NewMeetingService(meetingRepo *repository.MeetingRepository) *MeetingService {
 	return &MeetingService{meetingRepo}
 }
 
-func (s *MeetingService) CreateMeeting(meeting *model.Meeting) error {
+func (s *MeetingService) CreateMeeting(meeting *model.Meeting) (*model.Meeting, error) {
 	return s.meetingRepo.CreateMeeting(meeting)
 }
 
