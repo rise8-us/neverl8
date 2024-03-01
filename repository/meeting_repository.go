@@ -22,6 +22,15 @@ func (r *MeetingRepository) CreateMeeting(meeting *model.Meeting) (*model.Meetin
 	return meeting, nil
 }
 
+func (r *MeetingRepository) GetAllMeetings() (*[]model.Meeting, error) {
+	var meetings []model.Meeting
+
+	if err := r.DB.Find(&meetings).Error; err != nil {
+		return nil, fmt.Errorf("failed to retrieve all meetings: %w", err)
+	}
+	return &meetings, nil
+}
+
 func (r *MeetingRepository) GetMeetingByID(id uint) (*model.Meeting, error) {
 	var meeting model.Meeting
 	if err := r.DB.First(&meeting, id).Error; err != nil {

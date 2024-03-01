@@ -17,6 +17,9 @@ func (s *MeetingService) CreateMeeting(meeting *model.Meeting) (*model.Meeting, 
 	return s.meetingRepo.CreateMeeting(meeting)
 }
 
+func (s *MeetingService) GetAllMeetings() (*[]model.Meeting, error) {
+	return s.meetingRepo.GetAllMeetings()
+}
 func (s *MeetingService) GetMeetingByID(id uint) (*model.Meeting, error) {
 	return s.meetingRepo.GetMeetingByID(id)
 }

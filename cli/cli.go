@@ -54,3 +54,33 @@ func (c *CLI) CreateMeetingFromCLI() {
 
 	fmt.Println("Meeting created successfully!")
 }
+
+func (c *CLI) GetAllMeetingsFromCLI() {
+	fmt.Println("The following meetings are on the calendar: ")
+
+	meetings, err := c.meetingService.GetAllMeetings()
+	if err != nil {
+		fmt.Println("Failed to retrieve all meetings: ", err)
+		return
+	}
+
+	fmt.Println("Meetings:")
+	for i, meeting := range *meetings {
+		fmt.Printf("%d: Calendar: %s, Duration: %d minutes, Title: %s, Description: %s, Hosts: %s, HasBotGuest: %t\n",
+			i+1,
+			meeting.Calendar,
+			meeting.Duration,
+			meeting.Title,
+			meeting.Description,
+			meeting.Hosts,
+			meeting.HasBotGuest)
+	}
+}
+
+// func (c *CLI) UpdateMeetingFromCLI() {
+
+// }
+
+// func (c * CLI) DeleteMeetingFromCLI() {
+
+// }

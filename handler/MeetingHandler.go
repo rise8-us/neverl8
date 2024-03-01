@@ -41,6 +41,24 @@ func (h *MeetingHandler) CreateMeeting(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (h *MeetingHandler) GetAllMeetings(w http.ResponseWriter, r *http.Request) {
+	meetings, err := h.meetingRepo.GetAllMeetings()
+	if err != nil {
+		http.Error(w, "Failed to get meetings", http.StatusInternalServerError)
+		log.Printf("Error getting meetings: %v\n", err)
+		return
+	}
+	if meetings == nil {
+		http.Error(w, "Meetings not found", http.StatusNotFound)
+		return
+	}
+	if err := json.NewEncoder(w).Encode(meetings); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		log.Printf("Error encoding response: %v", err)
+		return
+	}
+}
+
 func (h *MeetingHandler) GetMeeting(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	meetingID, err := strconv.Atoi(id)

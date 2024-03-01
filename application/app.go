@@ -68,13 +68,16 @@ func (a *App) Start(ctx context.Context) error {
 	// Wait for the server to start listening
 	go func() {
 		<-serverStarted
-		// Initialize your repository, service, and CLI
+		// Initialize repository, service, and CLI
 		meetingRepo := repository.NewMeetingRepository(a.db)
 		meetingService := service.NewMeetingService(meetingRepo)
 		cliInstance := cli.NewCLI(meetingService)
 
-		// Call the CreateMeetingFromCLI method
-		cliInstance.CreateMeetingFromCLI()
+		// Allow users to create meetings
+		// cliInstance.CreateMeetingFromCLI()
+
+		// Retrieve all meetings
+		cliInstance.GetAllMeetingsFromCLI()
 	}()
 
 	fmt.Println("Server is running on port 8080")
