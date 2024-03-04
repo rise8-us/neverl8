@@ -74,7 +74,7 @@ func (a *App) Start(ctx context.Context) error {
 		cliInstance := cli.NewCLI(meetingService)
 
 		// Allow users to create meetings
-		// cliInstance.CreateMeetingFromCLI()
+		cliInstance.CreateMeetingFromCLI()
 
 		// Retrieve all meetings
 		cliInstance.GetAllMeetingsFromCLI()

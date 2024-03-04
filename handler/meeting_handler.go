@@ -1,4 +1,4 @@
-package handler
+package meeting_handler
 
 import (
 	"encoding/json"
@@ -8,15 +8,15 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/rise8-us/neverl8/model"
-	repository "github.com/rise8-us/neverl8/repository"
+	"github.com/rise8-us/neverl8/service"
 )
 
 type MeetingHandler struct {
-	meetingRepo *repository.MeetingRepository
+	MeetingService *service.MeetingService
 }
 
-func NewMeetingHandler(meetingRepo *repository.MeetingRepository) *MeetingHandler {
-	return &MeetingHandler{meetingRepo}
+func NewMeetingHandler(MeetingService *service.MeetingService) *MeetingHandler {
+	return &MeetingHandler{MeetingService}
 }
 
 func (h *MeetingHandler) CreateMeeting(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ func (h *MeetingHandler) CreateMeeting(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	if _, err := h.meetingRepo.CreateMeeting(&meeting); err != nil {
+	if _, err := h.MeetingService.CreateMeeting(&meeting); err != nil {
 		http.Error(w, "Failed to create meeting", http.StatusInternalServerError)
 		log.Printf("Error creating meeting: %v\n", err)
 		return
@@ -42,7 +42,7 @@ func (h *MeetingHandler) CreateMeeting(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *MeetingHandler) GetAllMeetings(w http.ResponseWriter, r *http.Request) {
-	meetings, err := h.meetingRepo.GetAllMeetings()
+	meetings, err := h.MeetingService.GetAllMeetings()
 	if err != nil {
 		http.Error(w, "Failed to get meetings", http.StatusInternalServerError)
 		log.Printf("Error getting meetings: %v\n", err)
@@ -67,7 +67,7 @@ func (h *MeetingHandler) GetMeeting(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	meeting, err := h.meetingRepo.GetMeetingByID(uint(meetingID))
+	meeting, err := h.MeetingService.GetMeetingByID(uint(meetingID))
 	if err != nil {
 		http.Error(w, "Failed to get meeting", http.StatusInternalServerError)
 		log.Printf("Error getting meeting: %v\n", err)
@@ -93,7 +93,7 @@ func (h *MeetingHandler) UpdateMeeting(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	if err := h.meetingRepo.UpdateMeeting(&meeting); err != nil {
+	if err := h.MeetingService.UpdateMeeting(&meeting); err != nil {
 		http.Error(w, "Failed to update meeting", http.StatusInternalServerError)
 		log.Printf("Error updating meeting: %v\n", err)
 		return
@@ -115,7 +115,7 @@ func (h *MeetingHandler) DeleteMeeting(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.meetingRepo.DeleteMeeting(uint(meetingID)); err != nil {
+	if err := h.MeetingService.DeleteMeeting(uint(meetingID)); err != nil {
 		http.Error(w, "Failed to delete meeting", http.StatusInternalServerError)
 		log.Printf("Error deleting meeting: %v\n", err)
 		return
