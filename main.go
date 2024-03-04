@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/signal"
 
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/rise8-us/neverl8/application"
 )
 

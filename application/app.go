@@ -10,11 +10,15 @@ import (
 	"time"
 
 	"github.com/go-chi/chi"
-	"github.com/jinzhu/gorm"
+	migrate "github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joho/godotenv"
 	"github.com/rise8-us/neverl8/cli"
-	"github.com/rise8-us/neverl8/model"
 	"github.com/rise8-us/neverl8/repository"
 	"github.com/rise8-us/neverl8/service"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type App struct {
@@ -41,18 +45,29 @@ func (a *App) Start(ctx context.Context) error {
 		ReadHeaderTimeout: requestTimeout,
 	}
 
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file %v", err)
+	}
+
 	// Connect to the database
-	db, err := gorm.Open("postgres", "host=localhost port=5432 user=postgres dbname=mydatabase password=password sslmode=disable")
+	dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode := os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_SSLMODE")
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=%s", dbHost, dbUser, dbPassword, dbName, dbSSLMode)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return fmt.Errorf("failed to connect to the database: %w", err)
 	}
-	defer db.Close()
-
 	a.db = db
 
-	// Automatically create or update database tables based on struct definitions
-	if err := db.AutoMigrate(&model.Meeting{}).Error; err != nil {
-		return fmt.Errorf("failed to auto migrate database: %w", err)
+	// Migrate db
+	m, err := migrate.New(
+		"file://db/migrations",
+		fmt.Sprintf(("postgres://%s:%s@%s:%s/%s?sslmode=%s"), dbUser, dbPassword, dbHost, dbPort, dbName, dbSSLMode))
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal(err)
 	}
 
 	// Channel to signal server startup
@@ -69,11 +84,11 @@ func (a *App) Start(ctx context.Context) error {
 	go func() {
 		<-serverStarted
 		// Initialize repository, service, and CLI
-		meetingRepo := repository.NewMeetingRepository(a.db)
+		meetingRepo := repository.NewMeetingRepository(db)
 		meetingService := service.NewMeetingService(meetingRepo)
 		cliInstance := cli.NewCLI(meetingService)
 
-		// Allow users to create meetings
+		// Create a meeting
 		cliInstance.CreateMeetingFromCLI()
 
 		// Retrieve all meetings

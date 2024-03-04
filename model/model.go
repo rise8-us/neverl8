@@ -2,19 +2,7 @@ package model
 
 import (
 	"time"
-
-	"github.com/jinzhu/gorm"
 )
-
-type Meeting struct {
-	gorm.Model
-	Calendar    string `json:"calendar"`
-	Duration    int    `json:"duration"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Hosts       string `json:"hosts"`
-	HasBotGuest bool   `json:"has_bot_guest"`
-}
 
 type Meetings struct {
 	ID          uint      `json:"id" gorm:"primaryKey"`
@@ -27,15 +15,15 @@ type Meetings struct {
 	StartTime   time.Time `json:"start_time" gorm:"type: timestamp with time zone; not null"`
 	EndTime     time.Time `json:"end_time" gorm:"type: timestamp with time zone; not null"`
 	CreatedAt   time.Time `json:"created_at" gorm:"type: timestamp with time zone; not null; default: current_timestamp with time zone"`
-	Hosts       []*Hosts  `json:"hosts" gorm:"many2many:host_meetings;"` // Many to many relationship with hosts
+	Hosts       []*Hosts  `gorm:"many2many:host_meetings;joinForeignKey:meeting_id;inverseJoinForeignKey:host_id"`
 }
 
 type Hosts struct {
 	ID              uint              `json:"id" gorm:"primaryKey"`
 	HostName        string            `json:"host_name" gorm:"type:varchar(255); not null"`
-	Candidates      []Candidates      `json:"candidates_id" gorm:"foreignKey:HostId"`
-	Meetings        []*Meetings       `json:"meetings" gorm:"many2many:host_meetings;"`  // Many to many relationship with meetings
-	TimePreferences []TimePreferences `json:"time_preferences" gorm:"foreignKey:HostId"` // One to many relationship with time preferences
+	Candidates      []Candidates      `json:"candidates_id" gorm:"foreignKey:host_id"`
+	Meetings        []*Meetings       `gorm:"many2many:host_meetings;joinForeignKey:host_id;inverseJoinForeignKey:meeting_id"`
+	TimePreferences []TimePreferences `json:"time_preferences" gorm:"foreignKey:host_id"` // One to many relationship with time preferences
 }
 
 type Candidates struct {
