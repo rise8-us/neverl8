@@ -1,0 +1,27 @@
+# Binary executable
+/build/
+
+# Dependency directories
+/node_modules/
+
+# Environment files
+.env
+
+# OS generated files
+.DS_Store # macOS
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log files
+*.log
+
+# Coverage directory
+/coverage/
+
+# Temporary files
+*.tmp
+*.temp

@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/drewfugate/neverl8/model"
-	repository "github.com/drewfugate/neverl8/repository"
+	"github.com/rise8-us/neverl8/model"
+	repository "github.com/rise8-us/neverl8/repository"
 )
 
 type MeetingService struct {
@@ -13,18 +13,10 @@ func NewMeetingService(meetingRepo *repository.MeetingRepository) *MeetingServic
 	return &MeetingService{meetingRepo}
 }
 
-func (s *MeetingService) CreateMeeting(meeting *model.Meeting) (*model.Meeting, error) {
-	return s.meetingRepo.CreateMeeting(meeting)
+func (s *MeetingService) CreateMeeting(meetings *model.Meetings, hosts []*model.Hosts) (*model.Meetings, error) {
+	return s.meetingRepo.CreateMeeting(meetings, hosts)
 }
 
-func (s *MeetingService) GetMeetingByID(id uint) (*model.Meeting, error) {
-	return s.meetingRepo.GetMeetingByID(id)
-}
-
-func (s *MeetingService) UpdateMeeting(meeting *model.Meeting) error {
-	return s.meetingRepo.UpdateMeeting(meeting)
-}
-
-func (s *MeetingService) DeleteMeeting(id uint) error {
-	return s.meetingRepo.DeleteMeeting(id)
+func (s *MeetingService) GetAllMeetings() ([]model.Meetings, error) {
+	return s.meetingRepo.ListAllMeetings()
 }

@@ -6,8 +6,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/drewfugate/neverl8/application"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/rise8-us/neverl8/application"
 )
 
 func main() {
