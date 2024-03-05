@@ -6,7 +6,7 @@ import (
 
 type Meetings struct {
 	ID          uint      `json:"id" gorm:"primaryKey"`
-	CandidateId uint      `json:"candidate_id" gorm:"type:integer; not null"`
+	CandidateID uint      `json:"candidate_id" gorm:"type:integer; not null"`
 	Calendar    string    `json:"calendar" gorm:"type:varchar(255); not null"`
 	Duration    int       `json:"duration" gorm:"type:integer; not null"`
 	Title       string    `json:"title" gorm:"type:varchar(255); not null"`
@@ -28,7 +28,7 @@ type Hosts struct {
 
 type Candidates struct {
 	ID              uint   `json:"id" gorm:"primaryKey"`
-	HostId          uint   `json:"host_id"` //foreign key to hosts
+	HostID          uint   `json:"host_id"` // foreign key to hosts
 	CandidateName   string `json:"candidate_name" gorm:"type:varchar(255); not null"`
 	Role            string `json:"role" gorm:"type:varchar(255); default: unknown role"`
 	Email           string `json:"email" gorm:"type:varchar(255); default: unknown email"`
@@ -38,14 +38,14 @@ type Candidates struct {
 
 // Referential table connecting hosts to meetings. Hosts can have several meetings scheduled, and meetings can have several hosts.
 type HostMeetings struct {
-	HostId    uint `json:"host_id" gorm:"primaryKey; autoIncrement:false; not null"`
-	MeetingId uint `json:"meeting_id" gorm:"primaryKey; autoIncrement:false; not null"`
+	HostID    uint `json:"host_id" gorm:"primaryKey; autoIncrement:false; not null"`
+	MeetingID uint `json:"meeting_id" gorm:"primaryKey; autoIncrement:false; not null"`
 }
 
 // Referential table connecting hosts to time preferences. Hosts can have several time preferences.
 type TimePreferences struct {
 	ID          uint      `json:"id" gorm:"primaryKey"`
-	HostId      uint      `json:"host_id" gorm:"not null"` // Foreign key to hosts
+	HostID      uint      `json:"host_id" gorm:"not null"` // Foreign key to hosts
 	StartWindow time.Time `json:"start_window" gorm:"type: timestamp with time zone; not null"`
 	EndWindow   time.Time `json:"end_window" gorm:"type: timestamp with time zone; not null"`
 }

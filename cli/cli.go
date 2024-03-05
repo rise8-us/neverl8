@@ -24,16 +24,17 @@ func (c *CLI) CreateMeetingFromCLI() {
 		{HostName: "Host 2"},
 	}
 
+	meetingDuration := 60
 	// New Meeting to be created
 	newMeeting := &model.Meetings{
-		CandidateId: 2,
+		CandidateID: 2,
 		Calendar:    "Example Calendar",
 		Duration:    60,
 		Title:       "Example Session",
 		Description: "Discuss the future of NeverL8",
 		HasBotGuest: false,
 		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(time.Minute * 60),
+		EndTime:     time.Now().Add(time.Minute * time.Duration(meetingDuration)),
 	}
 
 	// Create Meeting and Hosts
@@ -54,8 +55,8 @@ func (c *CLI) GetAllMeetingsFromCLI() {
 	}
 
 	fmt.Println("Meetings:")
-	for i, meeting := range meetings {
-		fmt.Printf("%d. %s\n", i+1, meeting.Title)
+	for i := range meetings {
+		fmt.Printf("%d. %s\n", i+1, meetings[i].Title)
 	}
 }
 

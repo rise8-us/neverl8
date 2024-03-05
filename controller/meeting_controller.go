@@ -1,15 +1,15 @@
-package meeting_controller
+package meetingcontroller
 
 import (
 	"github.com/rise8-us/neverl8/service"
 )
 
-type MeetingController struct {
-	MeetingService *service.MeetingService
+type meetingController struct {
+	meetingService *service.MeetingService
 }
 
-func NewMeetingController(MeetingService *service.MeetingService) *MeetingController {
-	return &MeetingController{MeetingService}
+func NewMeetingController(meetingService *service.MeetingService) *meetingController {
+	return &meetingController{meetingService}
 }
 
 //TODO: Add controller methods for HTTP requests

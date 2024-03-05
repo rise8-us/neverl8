@@ -51,7 +51,13 @@ func (a *App) Start(ctx context.Context) error {
 	}
 
 	// Connect to the database
-	dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode := os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("DB_SSLMODE")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbSSLMode := os.Getenv("DB_SSLMODE")
+
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=%s", dbHost, dbUser, dbPassword, dbName, dbSSLMode)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -66,8 +72,12 @@ func (a *App) Start(ctx context.Context) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatal(err)
+	if err := m.Up(); err != nil {
+		if err.Error() == "no change" {
+			log.Println("No migration to run")
+		} else {
+			log.Fatal(err)
+		}
 	}
 
 	// Channel to signal server startup
