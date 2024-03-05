@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS hosts (
-    id SERIAL PRIMARY KEY,
-    host_name TEXT NOT NULL
-);
