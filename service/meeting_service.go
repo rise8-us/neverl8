@@ -13,10 +13,10 @@ func NewMeetingService(meetingRepo *repository.MeetingRepository) *MeetingServic
 	return &MeetingService{meetingRepo}
 }
 
-func (s *MeetingService) CreateMeeting(meetings *model.Meetings, hosts []*model.Hosts) (*model.Meetings, error) {
-	return s.meetingRepo.CreateMeeting(meetings, hosts)
+func (s *MeetingService) CreateMeeting(meetings *model.Meetings, hosts *[]model.Hosts) (*model.Meetings, error) {
+	return s.meetingRepo.CreateMeeting(meetings, *hosts)
 }
 
 func (s *MeetingService) GetAllMeetings() ([]model.Meetings, error) {
-	return s.meetingRepo.ListAllMeetings()
+	return s.meetingRepo.GetAllMeetings()
 }
