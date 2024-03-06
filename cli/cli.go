@@ -19,7 +19,7 @@ func NewCLI(meetingService *service.MeetingService) *CLI {
 
 func (c *CLI) CreateMeetingFromCLI() {
 	// Create new Hosts
-	hosts := []*model.Hosts{
+	hosts := []model.Hosts{
 		{HostName: "Host 1"},
 		{HostName: "Host 2"},
 	}
@@ -38,7 +38,7 @@ func (c *CLI) CreateMeetingFromCLI() {
 	}
 
 	// Create Meeting and Hosts
-	createdMeeting, err := c.meetingService.CreateMeeting(newMeeting, hosts)
+	createdMeeting, err := c.meetingService.CreateMeeting(newMeeting, &hosts)
 	if err != nil {
 		log.Fatalf("Failed to create meeting and hosts: %v", err)
 	}
