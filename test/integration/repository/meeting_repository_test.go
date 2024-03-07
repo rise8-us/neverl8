@@ -16,6 +16,7 @@ func GetSampleMeeting() (*model.Meetings, *[]model.Host) {
 		{HostName: "Host 2"},
 	}
 
+	currentTime := time.Now().UTC()
 	meetingDuration := 60
 	// New Meeting to be created
 	meeting := &model.Meetings{
@@ -25,9 +26,9 @@ func GetSampleMeeting() (*model.Meetings, *[]model.Host) {
 		Title:       "Example Session",
 		Description: "Discuss the future of NeverL8",
 		HasBotGuest: false,
-		StartTime:   time.Now().UTC(),
-		EndTime:     time.Now().UTC().Add(time.Minute * time.Duration(meetingDuration)),
-		CreatedAt:   time.Now().UTC(),
+		StartTime:   currentTime,
+		EndTime:     currentTime.Add(time.Minute * time.Duration(meetingDuration)),
+		CreatedAt:   currentTime,
 	}
 
 	return meeting, hosts
