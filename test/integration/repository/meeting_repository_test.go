@@ -1,38 +1,17 @@
 package repository_test
 
 import (
-	"os"
 	"testing"
 	"time"
 
 	"github.com/rise8-us/neverl8/model"
 	"github.com/rise8-us/neverl8/repository"
-	testutil "github.com/rise8-us/neverl8/test/testcontainers"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
-// TestMain sets up the test database
-func TestMain(m *testing.M) {
-	testDB := testutil.SetupTestDB()
-	db = testDB.DB
-
-	code := runTests(m, testDB.TearDown)
-	os.Exit(code)
-}
-
-// While the m.Run() function already runs all the tests, os.Exit() does not respect the defer method.
-// This function is used to ensure that the test database is torn down after all tests are run.
-func runTests(m *testing.M, tearDown func()) int {
-	defer tearDown()
-	return m.Run()
-}
-
-func GetSampleMeeting() (*model.Meetings, *[]model.Hosts) {
+func GetSampleMeeting() (*model.Meetings, *[]model.Host) {
 	// Create new Hosts
-	hosts := &[]model.Hosts{
+	hosts := &[]model.Host{
 		{HostName: "Host 1"},
 		{HostName: "Host 2"},
 	}
@@ -46,14 +25,20 @@ func GetSampleMeeting() (*model.Meetings, *[]model.Hosts) {
 		Title:       "Example Session",
 		Description: "Discuss the future of NeverL8",
 		HasBotGuest: false,
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(time.Minute * time.Duration(meetingDuration)),
+		StartTime:   time.Now().UTC(),
+		EndTime:     time.Now().UTC().Add(time.Minute * time.Duration(meetingDuration)),
+		CreatedAt:   time.Now().UTC(),
 	}
 
 	return meeting, hosts
 }
 
 func TestCreateMeeting(t *testing.T) {
+	t.Cleanup(func() {
+		db.Where("1 = 1").Delete(&model.Meetings{})
+		db.Where("1 = 1").Delete(&model.Host{})
+	})
+
 	repo := repository.NewMeetingRepository(db)
 
 	meeting, hosts := GetSampleMeeting()
@@ -74,11 +59,43 @@ func TestCreateMeeting(t *testing.T) {
 }
 
 func TestGetAllMeetings(t *testing.T) {
+	t.Cleanup(func() {
+		db.Where("1 = 1").Delete(&model.Meetings{})
+		db.Where("1 = 1").Delete(&model.Host{})
+	})
+
 	repo := repository.NewMeetingRepository(db)
+
+	meeting, hosts := GetSampleMeeting()
+
+	// Create Meeting
+	_, err := repo.CreateMeeting(meeting, *hosts)
+	assert.NoError(t, err, "expected no error")
 
 	// Get all meetings
 	meetings, err := repo.GetAllMeetings()
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, meetings, "expected meetings to be retrieved")
 	assert.Equal(t, 1, len(meetings), "expected 1 meeting to be retrieved")
+}
+
+func TestGetMeetingByID(t *testing.T) {
+	t.Cleanup(func() {
+		db.Where("1 = 1").Delete(&model.Meetings{})
+		db.Where("1 = 1").Delete(&model.Host{})
+	})
+
+	repo := repository.NewMeetingRepository(db)
+
+	meeting, hosts := GetSampleMeeting()
+
+	// Create Meeting
+	createdMeeting, err := repo.CreateMeeting(meeting, *hosts)
+	assert.NoError(t, err, "expected no error")
+
+	// Get Meeting 1
+	retrievedMeeting, err := repo.GetMeetingByID(createdMeeting.ID)
+	assert.NoError(t, err, "expected no error")
+	assert.NotNil(t, retrievedMeeting, "expected meeting to be retrieved")
+	assert.Equal(t, *createdMeeting, *retrievedMeeting, "expected meeting to equal retrieved meeting")
 }

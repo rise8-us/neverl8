@@ -42,6 +42,25 @@ CREATE TABLE IF NOT EXISTS host_meetings (
 CREATE TABLE IF NOT EXISTS time_preferences (
   id SERIAL PRIMARY KEY,
   host_id INTEGER REFERENCES hosts(id),
-  start_window TIMESTAMP,
-  end_window TIMESTAMP -- TODO: consider using a duration instead of an end time
+  start_window TEXT DEFAULT '00:00',
+  end_window TEXT DEFAULT '00:00' -- TODO: consider using a duration instead of an end time
+);
+
+CREATE TABLE IF NOT EXISTS calendars (
+  id SERIAL PRIMARY KEY,
+  google_calendar_id TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS host_calendars (
+  calendar_id INTEGER NOT NULL,
+  host_id INTEGER NOT NULL,
+  PRIMARY KEY (calendar_id, host_id),
+  CONSTRAINT fk_calendar
+    FOREIGN KEY (calendar_id)
+    REFERENCES calendars(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_host
+    FOREIGN KEY (host_id)
+    REFERENCES hosts(id)
+    ON DELETE CASCADE
 );
