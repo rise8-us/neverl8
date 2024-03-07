@@ -16,7 +16,7 @@ func GetSampleMeeting() (*model.Meetings, *[]model.Host) {
 		{HostName: "Host 2"},
 	}
 
-	currentTime := time.Now().UTC()
+	currentTime := time.Now().UTC().Truncate(time.Second)
 	meetingDuration := 60
 	// New Meeting to be created
 	meeting := &model.Meetings{
