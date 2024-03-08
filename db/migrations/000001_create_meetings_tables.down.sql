@@ -5,3 +5,4 @@ DROP TABLE IF EXISTS meetings;
 DROP TABLE IF EXISTS calendar_hosts;
 DROP TABLE IF EXISTS calendars;
 DROP TABLE IF EXISTS hosts;
+DROP TABLE IF EXISTS sample_meetings;

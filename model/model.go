@@ -43,6 +43,13 @@ type Calendar struct {
 	Hosts            []Host `gorm:"many2many:host_calendars;joinForeignKey:host_id;inverseJoinForeignKey:calendar_id"`
 }
 
+type SampleMeetings struct {
+	ID          uint   `json:"id" gorm:"primaryKey"`
+	Title       string `json:"title" gorm:"type:varchar(255); not null"`
+	Description string `json:"description" gorm:"type:varchar(255); not null"`
+	Duration    int    `json:"duration" gorm:"type:integer; not null"`
+}
+
 // Referential table connecting hosts to meetings. Hosts can have several meetings scheduled, and meetings can have several hosts.
 type HostMeetings struct {
 	HostID    uint `json:"host_id" gorm:"primaryKey; autoIncrement:false; not null"`
