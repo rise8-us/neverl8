@@ -16,7 +16,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rise8-us/neverl8/cli"
 	"github.com/rise8-us/neverl8/repository"
-	"github.com/rise8-us/neverl8/service"
+	meetingSvc "github.com/rise8-us/neverl8/service/meeting"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -95,7 +95,7 @@ func (a *App) Start(ctx context.Context) error {
 		<-serverStarted
 		// Initialize repository, service, and CLI
 		meetingRepo := repository.NewMeetingRepository(db)
-		meetingService := service.NewMeetingService(meetingRepo)
+		meetingService := meetingSvc.NewMeetingService(meetingRepo)
 		cliInstance := cli.NewCLI(meetingService)
 
 		// Create a meeting

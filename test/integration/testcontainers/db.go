@@ -37,7 +37,7 @@ func SetupTestDB() *TestDB {
 
 	// Migrate db
 	m, err := migrate.New(
-		"file://../../db/migrations",
+		"file://../../../db/migrations",
 		fmt.Sprintf(("postgres://%s:%s@%s:%s/%s?sslmode=%s"), "user", "password", "localhost", port.Port(), "testDb", "disable"))
 	if err != nil {
 		log.Fatal(err)

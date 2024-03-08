@@ -1,14 +1,14 @@
 package meetingcontroller
 
 import (
-	"github.com/rise8-us/neverl8/service"
+	meetingSvc "github.com/rise8-us/neverl8/service/meeting"
 )
 
 type meetingController struct {
-	meetingService *service.MeetingService
+	meetingService *meetingSvc.MeetingService
 }
 
-func NewMeetingController(meetingService *service.MeetingService) *meetingController {
+func NewMeetingController(meetingService *meetingSvc.MeetingService) *meetingController {
 	return &meetingController{meetingService}
 }
 

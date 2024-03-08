@@ -6,20 +6,20 @@ import (
 	"time"
 
 	"github.com/rise8-us/neverl8/model"
-	"github.com/rise8-us/neverl8/service"
+	meetingSvc "github.com/rise8-us/neverl8/service/meeting"
 )
 
 type CLI struct {
-	meetingService *service.MeetingService
+	meetingService *meetingSvc.MeetingService
 }
 
-func NewCLI(meetingService *service.MeetingService) *CLI {
+func NewCLI(meetingService *meetingSvc.MeetingService) *CLI {
 	return &CLI{meetingService}
 }
 
 func (c *CLI) CreateMeetingFromCLI() {
 	// Create new Hosts
-	hosts := []model.Hosts{
+	hosts := []model.Host{
 		{HostName: "Host 1"},
 		{HostName: "Host 2"},
 	}
@@ -38,7 +38,7 @@ func (c *CLI) CreateMeetingFromCLI() {
 	}
 
 	// Create Meeting and Hosts
-	createdMeeting, err := c.meetingService.CreateMeeting(newMeeting, &hosts)
+	createdMeeting, err := c.meetingService.CreateMeeting(newMeeting, hosts)
 	if err != nil {
 		log.Fatalf("Failed to create meeting and hosts: %v", err)
 	}
