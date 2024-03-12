@@ -64,3 +64,10 @@ CREATE TABLE IF NOT EXISTS host_calendars (
     REFERENCES hosts(id)
     ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS sample_meetings (
+  id SERIAL PRIMARY KEY, 
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  duration INTEGER NOT NULL
+);

@@ -61,3 +61,20 @@ func (r *MeetingRepository) GetMeetingByID(id uint) (*model.Meetings, error) {
 	}
 	return &meeting, nil
 }
+
+func (r *MeetingRepository) CreateSampleMeeting(sampleMeeting *model.SampleMeetings) *model.SampleMeetings {
+	err := r.db.Create(sampleMeeting)
+	if err.Error != nil {
+		return nil
+	}
+
+	return sampleMeeting
+}
+
+func (r *MeetingRepository) GetSampleMeetings() ([]model.SampleMeetings, error) {
+	var sampleMeetings []model.SampleMeetings
+	if err := r.db.Find(&sampleMeetings).Error; err != nil {
+		return nil, err
+	}
+	return sampleMeetings, nil
+}
