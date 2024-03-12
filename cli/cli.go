@@ -6,23 +6,27 @@ import (
 	"time"
 
 	"github.com/rise8-us/neverl8/model"
+	hostSvc "github.com/rise8-us/neverl8/service/host"
 	meetingSvc "github.com/rise8-us/neverl8/service/meeting"
 )
 
 type CLI struct {
 	meetingService *meetingSvc.MeetingService
+	hostService    *hostSvc.HostService
 }
 
-func NewCLI(meetingService *meetingSvc.MeetingService) *CLI {
-	return &CLI{meetingService}
+func NewCLI(meetingService *meetingSvc.MeetingService, hostService *hostSvc.HostService) *CLI {
+	return &CLI{meetingService, hostService}
 }
 
 func (c *CLI) CreateMeetingFromCLI() {
 	// Create new Hosts
 	hosts := []model.Host{
-		{HostName: "Host 1"},
-		{HostName: "Host 2"},
+		{HostName: "Host 1", TimePreferences: []model.TimePreference{{HostID: 1, StartWindow: "09:00", EndWindow: "17:00"}}},
+		{HostName: "Host 2", TimePreferences: []model.TimePreference{{HostID: 1, StartWindow: "11:00", EndWindow: "15:00"}}},
 	}
+	host1, _ := c.hostService.CreateHost(&hosts[0])
+	host2, _ := c.hostService.CreateHost(&hosts[1])
 
 	meetingDuration := 60
 	// New Meeting to be created
@@ -35,13 +39,15 @@ func (c *CLI) CreateMeetingFromCLI() {
 		HasBotGuest: false,
 		StartTime:   time.Now(),
 		EndTime:     time.Now().Add(time.Minute * time.Duration(meetingDuration)),
+		Hosts:       []model.Host{*host1, *host2},
 	}
 
 	// Create Meeting and Hosts
-	createdMeeting, err := c.meetingService.CreateMeeting(newMeeting, hosts)
+	createdMeeting, err := c.meetingService.CreateMeeting(newMeeting)
 	if err != nil {
-		log.Fatalf("Failed to create meeting and hosts: %v", err)
+		log.Fatalf("Failed to create meeting: %v", err)
 	}
+
 	fmt.Printf("Meeting and hosts created successfully: %+v\n", createdMeeting)
 }
 

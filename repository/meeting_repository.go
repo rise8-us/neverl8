@@ -5,11 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type MeetingRepositoryInterface interface {
-	CreateMeeting(meeting *model.Meetings, host []model.Host) (*model.Meetings, error)
-	GetAllMeetings() ([]model.Meetings, error)
-}
-
 // MeetingRepository handles CRUD operations for Meetings.
 type MeetingRepository struct {
 	db *gorm.DB
@@ -21,23 +16,8 @@ func NewMeetingRepository(db *gorm.DB) *MeetingRepository {
 }
 
 // Adds a new Meeting to the database, including creating new Host if necessary.
-func (r *MeetingRepository) CreateMeeting(meeting *model.Meetings, host []model.Host) (*model.Meetings, error) {
-	// Step 1: Create and save each Host
-	// TODO: The user should be able to choose from a list of Host/this should be autopopulated. For now, we'll just create the Host.
-	for i := range host {
-		if err := r.db.Create(&host[i]).Error; err != nil {
-			return nil, err
-		}
-	}
-
-	// Step 2: Create the Meeting
+func (r *MeetingRepository) CreateMeeting(meeting *model.Meetings) (*model.Meetings, error) {
 	if err := r.db.Create(meeting).Error; err != nil {
-		return nil, err
-	}
-
-	// Step 3: Create the association between Host and meetings
-	err := r.db.Model(meeting).Association("Hosts").Append(host)
-	if err != nil {
 		return nil, err
 	}
 

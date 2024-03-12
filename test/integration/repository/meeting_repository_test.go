@@ -9,12 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func GetSampleMeeting() (*model.Meetings, *[]model.Host) {
+func GetSampleMeeting() *model.Meetings {
 	// Create new Hosts
-	hosts := &[]model.Host{
-		{HostName: "Host 1"},
-		{HostName: "Host 2"},
-	}
+	hosts := GetSampleHosts()
 
 	currentTime := time.Now().UTC().Truncate(time.Second)
 	meetingDuration := 60
@@ -29,9 +26,10 @@ func GetSampleMeeting() (*model.Meetings, *[]model.Host) {
 		StartTime:   currentTime,
 		EndTime:     currentTime.Add(time.Minute * time.Duration(meetingDuration)),
 		CreatedAt:   currentTime,
+		Hosts:       hosts,
 	}
 
-	return meeting, hosts
+	return meeting
 }
 
 func TestCreateMeeting(t *testing.T) {
@@ -42,10 +40,10 @@ func TestCreateMeeting(t *testing.T) {
 
 	repo := repository.NewMeetingRepository(db)
 
-	meeting, hosts := GetSampleMeeting()
+	meeting := GetSampleMeeting()
 
 	// Create Meeting
-	createdMeeting, err := repo.CreateMeeting(meeting, *hosts)
+	createdMeeting, err := repo.CreateMeeting(meeting)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, createdMeeting, "expected meeting to be created")
 	assert.Equal(t, uint(1), meeting.ID, "expected meeting id to be 1")
@@ -67,10 +65,10 @@ func TestGetAllMeetings(t *testing.T) {
 
 	repo := repository.NewMeetingRepository(db)
 
-	meeting, hosts := GetSampleMeeting()
+	meeting := GetSampleMeeting()
 
 	// Create Meeting
-	_, err := repo.CreateMeeting(meeting, *hosts)
+	_, err := repo.CreateMeeting(meeting)
 	assert.NoError(t, err, "expected no error")
 
 	// Get all meetings
@@ -88,17 +86,17 @@ func TestGetMeetingByID(t *testing.T) {
 
 	repo := repository.NewMeetingRepository(db)
 
-	meeting, hosts := GetSampleMeeting()
+	meeting := GetSampleMeeting()
 
 	// Create Meeting
-	createdMeeting, err := repo.CreateMeeting(meeting, *hosts)
+	createdMeeting, err := repo.CreateMeeting(meeting)
 	assert.NoError(t, err, "expected no error")
 
 	// Get Meeting 1
 	retrievedMeeting, err := repo.GetMeetingByID(createdMeeting.ID)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, retrievedMeeting, "expected meeting to be retrieved")
-	assert.Equal(t, *createdMeeting, *retrievedMeeting, "expected meeting to equal retrieved meeting")
+	assert.Equal(t, createdMeeting, retrievedMeeting, "expected meeting to equal retrieved meeting")
 }
 
 func TestCreateSampleMeeting(t *testing.T) {
@@ -147,10 +145,7 @@ func TestCreateMeetingWithSampleMeeting(t *testing.T) {
 	assert.NotNil(t, createdSampleMeeting, "expected sample meeting to be created")
 
 	// Create new Hosts
-	hosts := &[]model.Host{
-		{HostName: "Host 1"},
-		{HostName: "Host 2"},
-	}
+	hosts := GetSampleHosts()
 
 	currentTime := time.Now().UTC().Truncate(time.Second)
 	meetingDuration := 60
@@ -165,10 +160,11 @@ func TestCreateMeetingWithSampleMeeting(t *testing.T) {
 		StartTime:   currentTime,
 		EndTime:     currentTime.Add(time.Minute * time.Duration(meetingDuration)),
 		CreatedAt:   currentTime,
+		Hosts:       hosts,
 	}
 
 	// Create Meeting
-	createdMeeting, err := repo.CreateMeeting(meeting, *hosts)
+	createdMeeting, err := repo.CreateMeeting(meeting)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, createdMeeting, "expected meeting to be created")
 	assert.Equal(t, createdMeeting.Duration, sampleMeeting.Duration, "expected duration to match")
