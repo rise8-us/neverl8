@@ -6,14 +6,15 @@ CREATE TABLE IF NOT EXISTS meetings (
     title TEXT NOT NULL,
     description TEXT DEFAULT 'no description provided',
     has_bot_guest BOOLEAN DEFAULT FALSE,
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL,
+    start_time TIMESTAMP,
+    end_time TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS hosts (
     id SERIAL PRIMARY KEY,
-    host_name TEXT NOT NULL
+    host_name TEXT NOT NULL,
+    last_meeting_time TIMESTAMP DEFAULT '1970-01-01 00:00:00'
 );
 
 CREATE TABLE IF NOT EXISTS candidates (

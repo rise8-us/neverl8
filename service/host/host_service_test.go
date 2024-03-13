@@ -28,9 +28,9 @@ func (m *MockHostRepository) GetHostByID(id uint) (*model.Host, error) {
 	return args.Get(0).(*model.Host), args.Error(1)
 }
 
-func (m *MockHostRepository) CreateTimePreference(timePreference *model.TimePreference) (*model.TimePreference, error) {
+func (m *MockHostRepository) CreateTimePreference(timePreference []model.TimePreference) ([]model.TimePreference, error) {
 	args := m.Called(timePreference)
-	return args.Get(0).(*model.TimePreference), args.Error(1)
+	return args.Get(0).([]model.TimePreference), args.Error(1)
 }
 
 func (m *MockHostRepository) CreateCalendar(calendar *model.Calendar, host *model.Host) (*model.Calendar, error) {
@@ -84,13 +84,15 @@ func TestHostService_CreateTimePreference(t *testing.T) {
 	mockRepo := new(MockHostRepository)
 	hostService := hostSvc.NewHostService(mockRepo)
 
-	timePreference := &model.TimePreference{}
-	mockRepo.On("CreateTimePreference", timePreference).Return(timePreference, nil)
+	timePreference := &model.TimePreference{HostID: 1, StartWindow: "09:00", EndWindow: "17:00"}
+	mockRepo.On("CreateTimePreference", mock.Anything).Return(
+		[]model.TimePreference{{ID: 0, HostID: 1, StartWindow: "09:00", EndWindow: "17:00"}}, nil)
 
 	result, err := hostService.CreateTimePreference(timePreference)
 
 	assert.NoError(t, err, "expected no error")
-	assert.Equal(t, timePreference, result, "expected time preference to be created successfully")
+	assert.NotNil(t, result, "expected time preferences to be created")
+	assert.Equal(t, timePreference, &result[0], "expected time preferences to be equal")
 	mockRepo.AssertExpectations(t)
 }
 

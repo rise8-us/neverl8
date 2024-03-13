@@ -12,8 +12,8 @@ type Meetings struct {
 	Title       string    `json:"title" gorm:"type:varchar(255); not null"`
 	Description string    `json:"description" gorm:"type:varchar(255); default: no description provided"`
 	HasBotGuest bool      `json:"has_bot_guest" gorm:"type:bool; default: false"`
-	StartTime   time.Time `json:"start_time" gorm:"type: timestamp; not null"`
-	EndTime     time.Time `json:"end_time" gorm:"type: timestamp; not null"`
+	StartTime   time.Time `json:"start_time" gorm:"type: timestamp;"`
+	EndTime     time.Time `json:"end_time" gorm:"type: timestamp;"`
 	CreatedAt   time.Time `json:"created_at" gorm:"type: timestamp; default: current_timestamp"`
 	Hosts       []Host    `gorm:"many2many:host_meetings;joinForeignKey:meeting_id;inverseJoinForeignKey:host_id"`
 }
@@ -21,6 +21,7 @@ type Meetings struct {
 type Host struct {
 	ID              uint             `json:"id" gorm:"primaryKey"`
 	HostName        string           `json:"host_name" gorm:"type:varchar(255); not null"`
+	LastMeetingTime time.Time        `json:"last_meeting_time" gorm:"type:timestamp; default: 1970-01-01 00:00:00"`
 	Candidates      []Candidates     `json:"candidates_id" gorm:"foreignKey:host_id"`
 	Meetings        []Meetings       `gorm:"many2many:host_meetings;joinForeignKey:host_id;inverseJoinForeignKey:meeting_id"`
 	TimePreferences []TimePreference `json:"time_preferences" gorm:"foreignKey:host_id"` // One to many relationship with time preference
@@ -68,4 +69,12 @@ type TimePreference struct {
 type HostCalendar struct {
 	HostID     uint `json:"host_id" gorm:"primaryKey; autoIncrement:false; not null"`
 	CalendarID uint `json:"calendar_id" gorm:"primaryKey; autoIncrement:false; not null"`
+}
+
+type CalendarEvent struct {
+	ID          uint
+	HostID      uint
+	StartTime   time.Time
+	EndTime     time.Time
+	Description string
 }

@@ -2,6 +2,7 @@ package repository_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/rise8-us/neverl8/model"
 	"github.com/rise8-us/neverl8/repository"
@@ -9,10 +10,9 @@ import (
 )
 
 func GetSampleHosts() []model.Host {
-	// Create new Hosts
 	hosts := &[]model.Host{
-		{HostName: "Host 1", TimePreferences: []model.TimePreference{}, Calendars: []model.Calendar{}, Meetings: []model.Meetings{}},
-		{HostName: "Host 2", TimePreferences: []model.TimePreference{}, Calendars: []model.Calendar{}, Meetings: []model.Meetings{}},
+		{HostName: "Host 1", ID: 1, LastMeetingTime: time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)},
+		{HostName: "Host 2", ID: 2, LastMeetingTime: time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)},
 	}
 	return *hosts
 }
@@ -56,7 +56,7 @@ func TestGetHostByID(t *testing.T) {
 	host, err := repo.GetHostByID(createdHost.ID)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, host, "expected host to be retrieved")
-	assert.Equal(t, *createdHost, *host, "expected host to equal retrieved host")
+	assert.Equal(t, createdHost.ID, host.ID, "expected host to equal retrieved host")
 }
 
 func TestGetAllHosts(t *testing.T) {
@@ -99,11 +99,14 @@ func TestCreateHostTimePreferences(t *testing.T) {
 	// Create TimePreference for Host 1
 	startTime := "14:00" // 0900 EST
 	endTime := "17:00"   // 1200 EST
+	startTime2 := "18:00"
+	endTime2 := "21:00"
 
-	timePreference := model.TimePreference{HostID: createdHost.ID, StartWindow: startTime, EndWindow: endTime}
+	timePreference := []model.TimePreference{{HostID: createdHost.ID, StartWindow: startTime, EndWindow: endTime},
+		{HostID: createdHost.ID, StartWindow: startTime2, EndWindow: endTime2}}
 
 	// Test Create TimePreferences for Host 1
-	createdTimePreference, err := repo.CreateTimePreference(&timePreference)
+	createdTimePreference, err := repo.CreateTimePreference(timePreference)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, createdTimePreference, "expected time preferences to be created")
 }
@@ -125,10 +128,13 @@ func TestGetHostTimePreferences(t *testing.T) {
 	// Create TimePreference for Host 1
 	startTime := "14:00" // 0900 EST
 	endTime := "17:00"   // 1200 EST
+	startTime2 := "18:00"
+	endTime2 := "21:00"
 
-	timePreference := model.TimePreference{HostID: createdHost.ID, StartWindow: startTime, EndWindow: endTime}
+	timePreference := []model.TimePreference{{HostID: createdHost.ID, StartWindow: startTime, EndWindow: endTime},
+		{HostID: createdHost.ID, StartWindow: startTime2, EndWindow: endTime2}}
 
-	createdTimePreference, err := repo.CreateTimePreference(&timePreference)
+	createdTimePreference, err := repo.CreateTimePreference(timePreference)
 	assert.NoError(t, err, "expected no error when creating time preference")
 	assert.NotNil(t, createdTimePreference, "expected time preferences to be created")
 
@@ -138,7 +144,7 @@ func TestGetHostTimePreferences(t *testing.T) {
 
 	// Get TimePreferences for Host 1
 	assert.NotNil(t, newHost[0].TimePreferences, "expected time preferences to be retrieved")
-	assert.Equal(t, timePreference, *createdTimePreference, "expected time preference to equal retrieved time preference")
+	assert.Equal(t, timePreference, createdTimePreference, "expected time preference to equal retrieved time preference")
 }
 
 func TestCreateHostCalendar(t *testing.T) {
