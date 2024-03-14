@@ -15,6 +15,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	"github.com/rise8-us/neverl8/cli"
+	controller "github.com/rise8-us/neverl8/controller"
 	"github.com/rise8-us/neverl8/repository"
 	hostSvc "github.com/rise8-us/neverl8/service/host"
 	meetingSvc "github.com/rise8-us/neverl8/service/meeting"
@@ -23,16 +24,17 @@ import (
 )
 
 type App struct {
-	router *chi.Mux
-	db     *gorm.DB
+	router            *chi.Mux
+	db                *gorm.DB
+	meetingService    *meetingSvc.MeetingService
+	meetingController *controller.MeetingController
+	hostService       *hostSvc.HostService
 }
 
 func New() *App {
 	app := &App{
 		router: chi.NewRouter(),
 	}
-
-	app.loadRoutes()
 
 	return app
 }
@@ -80,6 +82,14 @@ func (a *App) Start(ctx context.Context) error {
 			log.Fatal(err)
 		}
 	}
+
+	meetingRepo := repository.NewMeetingRepository(a.db)
+	a.meetingService = meetingSvc.NewMeetingService(meetingRepo, nil)
+	a.meetingController = controller.NewMeetingController(a.meetingService)
+	hostRepo := repository.NewHostRepository(a.db)
+	a.hostService = hostSvc.NewHostService(hostRepo)
+
+	a.loadRoutes()
 
 	// Channel to signal server startup
 	serverStarted := make(chan struct{})

@@ -1,8 +1,9 @@
 # Binary executable
 /build/
+dist
 
 # Dependency directories
-/node_modules/
+node_modules
 
 # Environment files
 .env
@@ -15,6 +16,13 @@
 .idea/
 *.swp
 *.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+/dist
+
 
 # Log files
 *.log

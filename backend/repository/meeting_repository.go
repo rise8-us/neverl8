@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/rise8-us/neverl8/model"
 	"gorm.io/gorm"
 )
@@ -36,10 +38,29 @@ func (r *MeetingRepository) GetAllMeetings() ([]model.Meetings, error) {
 // Returns a Meeting by its ID.
 func (r *MeetingRepository) GetMeetingByID(id uint) (*model.Meetings, error) {
 	var meeting model.Meetings
-	if err := r.db.Preload("Hosts").First(&meeting, id).Error; err != nil {
+	if err := r.db.Where("id = ?", id).Preload("Hosts.TimePreferences").First(&meeting, id).Error; err != nil {
 		return nil, err
 	}
 	return &meeting, nil
+}
+
+func (r *MeetingRepository) GetMeetingsByDate(date string) ([]model.Meetings, error) {
+	var meetings []model.Meetings
+	// Parse the date query parameter to time.Time
+	parsedDate, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return nil, err
+	}
+
+	dayStart := time.Date(parsedDate.Year(), parsedDate.Month(), parsedDate.Day(), 0, 0, 0, 0, parsedDate.Location())
+	dayEnd := dayStart.AddDate(0, 0, 1)
+
+	result := r.db.Where("start_time >= ? AND start_time < ?", dayStart, dayEnd).Preload("Hosts.TimePreferences").Find(&meetings)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return meetings, nil
 }
 
 func (r *MeetingRepository) CreateSampleMeeting(sampleMeeting *model.SampleMeetings) *model.SampleMeetings {

@@ -28,6 +28,16 @@ func (m *MockMeetingService) GetAllMeetings() ([]model.Meetings, error) {
 	return args.Get(0).([]model.Meetings), args.Error(1)
 }
 
+func (m *MockMeetingService) GetMeetingByID(id uint) (*model.Meetings, error) {
+	args := m.Called(id)
+	return args.Get(0).(*model.Meetings), args.Error(1)
+}
+
+func (m *MockMeetingService) GetMeetingsByDate(date string) ([]model.Meetings, error) {
+	args := m.Called(date)
+	return args.Get(0).([]model.Meetings), args.Error(1)
+}
+
 func (m *MockMeetingService) GetAvailableTimeBlocks(meeting *model.Meetings, day time.Time) ([]model.TimePreference, error) {
 	args := m.Called(meeting, day)
 	return args.Get(0).([]model.TimePreference), args.Error(1)

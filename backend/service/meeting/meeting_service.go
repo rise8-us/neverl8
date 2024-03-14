@@ -11,6 +11,8 @@ import (
 type MeetingRepositoryInterface interface {
 	CreateMeeting(meeting *model.Meetings) (*model.Meetings, error)
 	GetAllMeetings() ([]model.Meetings, error)
+	GetMeetingByID(id uint) (*model.Meetings, error)
+	GetMeetingsByDate(date string) ([]model.Meetings, error)
 }
 
 type MeetingService struct {
@@ -28,6 +30,14 @@ func (s *MeetingService) CreateMeeting(meetings *model.Meetings) (*model.Meeting
 
 func (s *MeetingService) GetAllMeetings() ([]model.Meetings, error) {
 	return s.meetingRepo.GetAllMeetings()
+}
+
+func (s *MeetingService) GetMeetingByID(id uint) (*model.Meetings, error) {
+	return s.meetingRepo.GetMeetingByID(id)
+}
+
+func (s *MeetingService) GetMeetingsByDate(date string) ([]model.Meetings, error) {
+	return s.meetingRepo.GetMeetingsByDate(date)
 }
 
 func (s *MeetingService) GetAvailableTimeBlocks(meeting *model.Meetings, date time.Time) ([]model.TimePreference, error) {

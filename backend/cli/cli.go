@@ -23,7 +23,7 @@ func (c *CLI) CreateMeetingFromCLI() {
 	// Create new Hosts
 	hosts := []model.Host{
 		{HostName: "Host 1", TimePreferences: []model.TimePreference{{HostID: 1, StartWindow: "09:00", EndWindow: "17:00"}}},
-		{HostName: "Host 2", TimePreferences: []model.TimePreference{{HostID: 1, StartWindow: "11:00", EndWindow: "15:00"}}},
+		{HostName: "Host 2", TimePreferences: []model.TimePreference{{HostID: 2, StartWindow: "11:00", EndWindow: "15:00"}}},
 	}
 	host1, _ := c.hostService.CreateHost(&hosts[0])
 	host2, _ := c.hostService.CreateHost(&hosts[1])
