@@ -59,10 +59,10 @@ type HostMeetings struct {
 
 // Referential table connecting hosts to time preferences. Hosts can have several time preferences.
 type TimePreference struct {
-	ID          uint   `json:"id" gorm:"primaryKey"`
-	HostID      uint   `json:"host_id" gorm:"not null"` // Foreign key to hosts
-	StartWindow string `json:"start_window" gorm:"type:string; default: 00:00"`
-	EndWindow   string `json:"end_window" gorm:"type:string; default: 00:00"`
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	HostID    uint      `json:"host_id" gorm:"not null"` // Foreign key to hosts
+	StartTime time.Time `json:"start_time" gorm:"type:timestamp"`
+	EndTime   time.Time `json:"end_time" gorm:"type:timestamp"`
 }
 
 // Referential table connecting hosts to calendars. Hosts can have several individual calendars, and group calendars can have several hosts.

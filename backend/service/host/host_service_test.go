@@ -2,6 +2,7 @@ package host_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/rise8-us/neverl8/model"
 	hostSvc "github.com/rise8-us/neverl8/service/host"
@@ -28,9 +29,9 @@ func (m *MockHostRepository) GetHostByID(id uint) (*model.Host, error) {
 	return args.Get(0).(*model.Host), args.Error(1)
 }
 
-func (m *MockHostRepository) CreateTimePreference(timePreference []model.TimePreference) ([]model.TimePreference, error) {
+func (m *MockHostRepository) CreateTimePreference(timePreference *model.TimePreference) (*model.TimePreference, error) {
 	args := m.Called(timePreference)
-	return args.Get(0).([]model.TimePreference), args.Error(1)
+	return args.Get(0).(*model.TimePreference), args.Error(1)
 }
 
 func (m *MockHostRepository) CreateCalendar(calendar *model.Calendar, host *model.Host) (*model.Calendar, error) {
@@ -84,15 +85,18 @@ func TestHostService_CreateTimePreference(t *testing.T) {
 	mockRepo := new(MockHostRepository)
 	hostService := hostSvc.NewHostService(mockRepo)
 
-	timePreference := &model.TimePreference{HostID: 1, StartWindow: "09:00", EndWindow: "17:00"}
+	layout := "15:04"
+	startTime, _ := time.Parse(layout, "09:00")
+	endTime, _ := time.Parse(layout, "17:00")
+	timePreference := model.TimePreference{HostID: 1, StartTime: startTime, EndTime: endTime}
 	mockRepo.On("CreateTimePreference", mock.Anything).Return(
-		[]model.TimePreference{{ID: 0, HostID: 1, StartWindow: "09:00", EndWindow: "17:00"}}, nil)
+		&model.TimePreference{ID: 0, HostID: 1, StartTime: startTime, EndTime: endTime}, nil)
 
-	result, err := hostService.CreateTimePreference(timePreference)
+	result, err := hostService.CreateTimePreference(&timePreference)
 
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, result, "expected time preferences to be created")
-	assert.Equal(t, timePreference, &result[0], "expected time preferences to be equal")
+	assert.Equal(t, &timePreference, result, "expected time preferences to be equal")
 	mockRepo.AssertExpectations(t)
 }
 

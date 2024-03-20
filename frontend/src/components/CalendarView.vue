@@ -1,22 +1,44 @@
 <template>
-    <div>
-      <input type="date" v-model="selectedDate" @change="fetchMeetingsForDay" />
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        selectedDate: '',
-      };
+  <v-date-picker
+    :model-value="date"
+    :min="minDate"
+    :max="maxDate"
+    @update:model-value="handleDateInput"
+  ></v-date-picker>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      date: null,
+    };
+  },
+  computed: {
+    minDate() {
+      const today = new Date();
+      today.setDate(today.getDate() - 1);
+      return today;
     },
-    methods: {
-      fetchMeetingsForDay() {
-        // Emit an event with the selected date
-        this.$emit('dateSelected', this.selectedDate);
-      },
+    maxDate() {
+      const today = new Date();
+      today.setDate(today.getDate() + 30);
+      return today;
     },
-  };
-  </script>
-  
+  },
+  methods: {
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    },
+    handleDateInput(date) {
+      this.date = date;
+      this.$emit("dateSelected", this.formatDate(date));
+    },
+  },
+};
+</script>

@@ -1,17 +1,22 @@
 <template>
-  <div id="app">
+  <v-app>
     <CalendarView @dateSelected="handleDateSelected" />
-    <ScheduleMeeting v-if="meeting" :meeting="meeting" @scheduleConfirmed="handleScheduleConfirmed" />
-  </div>
+    <ScheduleMeeting
+      v-if="meeting"
+      :meeting="meeting"
+      :availableTimeSlots="availableTimeSlots"
+      @scheduleConfirmed="handleScheduleConfirmed"
+    />
+  </v-app>
 </template>
 
 <script>
-import CalendarView from './components/CalendarView.vue';
-import ScheduleMeeting from './components/ScheduleMeeting.vue';
-import axios from 'axios';
+import CalendarView from "./components/CalendarView.vue";
+import ScheduleMeeting from "./components/ScheduleMeeting.vue";
+import axios from "axios";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     CalendarView,
     ScheduleMeeting,
@@ -19,22 +24,37 @@ export default {
   data() {
     return {
       meeting: null,
+      availableTimeSlots: [],
     };
   },
+
+  mounted() {
+    this.fetchMeetingDetails();
+  },
   methods: {
-    async handleDateSelected(date) {
+    async fetchMeetingDetails() {
       // Fetch meeting details based on hardcoded ID
       try {
-        const response = await axios.get(`/api/meeting?id=26`);
-        this.meeting = { ...response.data, selectedDate: date };
+        const response = await axios.get(`/api/meeting?id=1`);
+        this.meeting = response.data;
       } catch (error) {
-        console.error('Error fetching meeting:', error);
+        console.error("Error fetching meeting:", error);
+      }
+    },
+    async handleDateSelected(date) {
+      try {
+        const response = await axios.get(
+          `/api/meeting/time-slots?date=${date}&id=1`
+        );
+        this.availableTimeSlots = response.data;
+      } catch (error) {
+        console.error("Error fetching available time slots:", error);
+        this.availableTimeSlots = [];
       }
     },
     handleScheduleConfirmed() {
-      // You could update the meeting object or UI here to reflect the scheduled state
       alert("Meeting scheduled!");
-    }
+    },
   },
 };
 </script>

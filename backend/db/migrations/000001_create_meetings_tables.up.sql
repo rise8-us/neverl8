@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS host_meetings (
 CREATE TABLE IF NOT EXISTS time_preferences (
   id SERIAL PRIMARY KEY,
   host_id INTEGER REFERENCES hosts(id),
-  start_window TEXT DEFAULT '00:00',
-  end_window TEXT DEFAULT '00:00' -- TODO: consider using a duration instead of an end time
+  start_time TIMESTAMP,
+  end_time TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS calendars (

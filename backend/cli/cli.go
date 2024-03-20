@@ -21,9 +21,14 @@ func NewCLI(meetingService *meetingSvc.MeetingService, hostService *hostSvc.Host
 
 func (c *CLI) CreateMeetingFromCLI() {
 	// Create new Hosts
+	layout := "15:04"
+	startTime, _ := time.Parse(layout, "09:00")
+	endTime, _ := time.Parse(layout, "17:00")
+	startTime2, _ := time.Parse(layout, "11:00")
+	endTime2, _ := time.Parse(layout, "15:00")
 	hosts := []model.Host{
-		{HostName: "Host 1", TimePreferences: []model.TimePreference{{HostID: 1, StartWindow: "09:00", EndWindow: "17:00"}}},
-		{HostName: "Host 2", TimePreferences: []model.TimePreference{{HostID: 2, StartWindow: "11:00", EndWindow: "15:00"}}},
+		{HostName: "Host 1", TimePreferences: []model.TimePreference{{HostID: 1, StartTime: startTime, EndTime: endTime}}},
+		{HostName: "Host 2", TimePreferences: []model.TimePreference{{HostID: 2, StartTime: startTime2, EndTime: endTime2}}},
 	}
 	host1, _ := c.hostService.CreateHost(&hosts[0])
 	host2, _ := c.hostService.CreateHost(&hosts[1])

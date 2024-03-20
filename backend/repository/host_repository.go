@@ -9,7 +9,7 @@ type HostRepositoryInterface interface {
 	CreateHost(host *model.Host) (*model.Host, error)
 	GetHostByID(id uint) (*model.Host, error)
 	GetAllHosts() ([]model.Host, error)
-	CreateTimePreference(timePreference []model.TimePreference) ([]model.TimePreference, error)
+	CreateTimePreference(timePreference *model.TimePreference) (*model.TimePreference, error)
 	CreateCalendar(calendar *model.Calendar, host *model.Host) (*model.Calendar, error)
 }
 
@@ -48,9 +48,9 @@ func (r *HostRepository) GetAllHosts() ([]model.Host, error) {
 }
 
 // Adds a new TimePreference to the database for a Host.
-func (r *HostRepository) CreateTimePreference(timePreference []model.TimePreference) ([]model.TimePreference, error) {
+func (r *HostRepository) CreateTimePreference(timePreference *model.TimePreference) (*model.TimePreference, error) {
 	if err := r.db.Create(timePreference).Error; err != nil {
-		return nil, err
+		return timePreference, err
 	}
 
 	return timePreference, nil

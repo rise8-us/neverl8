@@ -16,6 +16,7 @@ func (a *App) loadRoutes() {
 
 	a.router.Get("/api/meetings", a.meetingController.GetAllMeetings)
 	a.router.Get("/api/meeting", a.meetingController.GetMeetingByID)
+	a.router.Get("/api/meeting/time-slots", a.meetingController.GetAvailableTimeBlocks)
 
 	// Handle my /frontend route
 	workDir, _ := os.Getwd()

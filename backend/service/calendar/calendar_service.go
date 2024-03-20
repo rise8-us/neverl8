@@ -7,10 +7,10 @@ import (
 )
 
 type CalendarServiceInterface interface {
-	GetAllCalendarEventsForDay(day time.Time, hosts []model.Host) []model.CalendarEvent
+	GetAllCalendarEventsForDay(day time.Time, hosts []model.Host) ([]model.CalendarEvent, error)
 }
 
 // TODO: This function should call the google api to get the calendar for each host
-func GetAllCalendarEventsForDay(_ time.Time, _ []model.Host) []model.CalendarEvent {
-	return []model.CalendarEvent{}
+func GetAllCalendarEventsForDay(date time.Time, hosts []model.Host) ([]model.CalendarEvent, error) {
+	return nil, nil
 }
