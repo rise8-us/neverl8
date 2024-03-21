@@ -14,8 +14,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.22
-      - name: Lint
-        uses: golangci/golangci-lint-action@v3
+      - uses: golangci/golangci-lint-action@v3
         with:
           working-directory: ./backend
   test:
@@ -26,8 +25,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.22
-      - name: Test
-        run: go test -v ./...
+      - run: go test -v ./...
         working-directory: ./backend
 
   release:
