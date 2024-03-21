@@ -1,57 +1,68 @@
 <template>
-  <div>
-    <h2>Schedule Meeting</h2>
-    <div v-if="meeting">
-      <p>Meeting: {{ meeting.title }}</p>
-      <p>Duration: {{ meeting.duration }} minutes</p>
-      <div v-for="host in meeting.Hosts" :key="host.id">
-        <ul v-if="isHostInAvailableSlots(host.id)">
-          {{
-            host.host_name
-          }}
-          is available for a meeting at the following times
-        </ul>
-      </div>
-      <div v-if="availableTimeSlots.length > 0">
-        <h3>Available Time Slots:</h3>
-        <ul>
-          <li v-for="slot in availableTimeSlots" :key="slot.id">
-            {{ formatDate(slot.start_time) }} -
-            {{ formatDate(slot.end_time) }}
-            <button
-              @click="selectTimePreference(slot), console.log(slot)"
-              :class="{
-                'selected-time-slot': selectedTimeSlotID === slot.id,
-              }"
+  <v-container>
+    <v-row v-if="meeting" justify="start">
+      <v-col cols="12" sm="8" md="8" lg="8" xl="6" xxl="5">
+        <v-card outlined>
+          <v-card-title> Meeting: {{ meeting.title }} </v-card-title>
+          <v-card-text>
+            Duration: {{ meeting.duration }} minutes
+            <v-divider class="my-3"></v-divider>
+            <div v-for="host in meeting.Hosts" :key="host.id">
+              <v-chip v-if="isHostInAvailableSlots(host.id)" class="mb-2">
+                {{ host.host_name }} is available for meetings
+              </v-chip>
+            </div>
+            <v-divider
+              class="my-3"
+              v-if="availableTimeSlots.length > 0"
+            ></v-divider>
+            <v-subheader>Available Time Slots:</v-subheader>
+            <v-virtual-scroll
+              :items="availableTimeSlots"
+              max-height="270"
+              v-if="availableTimeSlots.length > 0"
             >
-              Select
-            </button>
-          </li>
-        </ul>
-      </div>
-      <div v-else>
-        <h3>No available time slots for this day</h3>
-      </div>
-      <div v-if="selectedTimeSlotID >= 0">
-        <h4>Enter your details</h4>
-        <form @submit.prevent="scheduleMeeting">
-          <input
-            type="text"
-            v-model="candidateName"
-            placeholder="Your Name"
-            required
-          />
-          <input
-            type="email"
-            v-model="candidateEmail"
-            placeholder="Your Email"
-            required
-          />
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-    </div>
-  </div>
+              <template v-slot:default="{ item }">
+                <v-list-item
+                  @click="selectTimePreference(item)"
+                  :active="item.id === selectedTimeSlotID"
+                >
+                  {{ formatDate(item.start_time) }} -
+                  {{ formatDate(item.end_time) }}
+                </v-list-item>
+              </template>
+            </v-virtual-scroll>
+            <div v-else>
+              <v-alert border="left" type="info" col="12"
+                >No available time slots for this day</v-alert
+              >
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="6" v-if="selectedTimeSlotID >= 0">
+        <v-card outlined>
+          <v-card-title>Enter your details</v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="scheduleMeeting">
+              <v-text-field
+                v-model="candidateName"
+                label="Your Name"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="candidateEmail"
+                label="Your Email"
+                type="email"
+                required
+              ></v-text-field>
+              <v-btn type="submit" color="primary">Submit</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -65,6 +76,7 @@ export default {
       candidateName: "",
       candidateEmail: "",
       selectedTimeSlotID: -1,
+      selectedSlot: null,
     };
   },
   methods: {
@@ -73,13 +85,20 @@ export default {
     },
     selectTimePreference(selectedSlot) {
       this.selectedTimeSlotID = selectedSlot.id;
+      this.selectedSlot = selectedSlot;
     },
     scheduleMeeting() {
-      this.$emit("scheduleConfirmed");
+      this.$emit(
+        "scheduleMeeting",
+        this.selectedSlot,
+        this.candidateName,
+        this.candidateEmail
+      );
       // Reset form
       this.candidateName = "";
       this.candidateEmail = "";
       this.selectedTimeSlotID = -1;
+      this.selectedSlot = null;
     },
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -91,10 +110,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.selected-time-slot {
-  background-color: #4caf50;
-  color: white;
-}
-</style>

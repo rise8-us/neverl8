@@ -1,10 +1,13 @@
 <template>
-  <v-date-picker
-    :model-value="date"
-    :min="minDate"
-    :max="maxDate"
-    @update:model-value="handleDateInput"
-  ></v-date-picker>
+  <v-container class="d-flex justify-end">
+    <v-date-picker
+      show-adjacent-months
+      :model-value="date"
+      :min="minDate"
+      :max="maxDate"
+      @update:model-value="handleDateInput"
+    ></v-date-picker>
+  </v-container>
 </template>
 
 <script>

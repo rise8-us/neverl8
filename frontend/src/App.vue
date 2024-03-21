@@ -1,12 +1,23 @@
 <template>
   <v-app>
-    <CalendarView @dateSelected="handleDateSelected" />
-    <ScheduleMeeting
-      v-if="meeting"
-      :meeting="meeting"
-      :availableTimeSlots="availableTimeSlots"
-      @scheduleConfirmed="handleScheduleConfirmed"
-    />
+    <v-container>
+      <v-row class="d-flex justify-center">
+        <h1>Neverl8 Meeting Scheduler</h1></v-row
+      >
+      <v-divider class="my-4"></v-divider>
+      <v-row>
+        <v-col>
+          <CalendarView @dateSelected="handleDateSelected" />
+        </v-col>
+        <v-col>
+          <ScheduleMeeting
+            v-if="meeting"
+            :meeting="meeting"
+            :availableTimeSlots="availableTimeSlots"
+            @scheduleMeeting="handleScheduleMeeting"
+          /> </v-col
+      ></v-row>
+    </v-container>
   </v-app>
 </template>
 
@@ -52,7 +63,21 @@ export default {
         this.availableTimeSlots = [];
       }
     },
-    handleScheduleConfirmed() {
+    async handleScheduleMeeting(
+      selectedTimeSlot,
+      candidateName,
+      candidateEmail
+    ) {
+      try {
+        await axios.post(`/api/meeting/schedule`, {
+          meeting_id: this.meeting.id,
+          time_slot: selectedTimeSlot,
+          candidate_name: candidateName,
+          candidate_email: candidateEmail,
+        });
+      } catch (error) {
+        console.error("Error scheduling meeting:", error);
+      }
       alert("Meeting scheduled!");
     },
   },

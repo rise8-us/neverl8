@@ -41,7 +41,7 @@ func (s *MeetingService) GetMeetingsByDate(date string) ([]model.Meetings, error
 }
 
 func (s *MeetingService) GetAvailableTimeBlocks(meeting model.Meetings, date time.Time) ([]model.TimePreference, error) {
-	if date.Day() <= time.Now().Day() {
+	if date.Before(time.Now()) {
 		return []model.TimePreference{}, fmt.Errorf("cannot schedule a meeting less than one day in advance")
 	}
 
