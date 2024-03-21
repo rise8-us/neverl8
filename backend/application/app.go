@@ -48,20 +48,15 @@ func (a *App) Start(ctx context.Context) error {
 		ReadHeaderTimeout: requestTimeout,
 	}
 
-	err := godotenv.Load()
+	// Load environment variables
+	envMap, err := LoadEnvVariables()
 	if err != nil {
-		log.Fatalf("Error loading .env file %v", err)
+		return fmt.Errorf("failed to load environment variables: %w", err)
 	}
 
-	// Connect to the database
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	dbSSLMode := os.Getenv("DB_SSLMODE")
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=%s",
+		envMap["DB_HOST"], envMap["DB_USER"], envMap["DB_PASSWORD"], envMap["DB_NAME"], envMap["DB_SSLMODE"])
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=%s", dbHost, dbUser, dbPassword, dbName, dbSSLMode)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return fmt.Errorf("failed to connect to the database: %w", err)
@@ -71,7 +66,8 @@ func (a *App) Start(ctx context.Context) error {
 	// Migrate db
 	m, err := migrate.New(
 		"file://db/migrations",
-		fmt.Sprintf(("postgres://%s:%s@%s:%s/%s?sslmode=%s"), dbUser, dbPassword, dbHost, dbPort, dbName, dbSSLMode))
+		fmt.Sprintf(("postgres://%s:%s@%s:%s/%s?sslmode=%s"),
+			envMap["DB_USER"], envMap["DB_PASSWORD"], envMap["DB_HOST"], envMap["DB_PORT"], envMap["DB_NAME"], envMap["DB_SSLMODE"]))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -139,4 +135,21 @@ func (a *App) Start(ctx context.Context) error {
 	fmt.Println("Server stopped gracefully")
 
 	return nil
+}
+
+func LoadEnvVariables() (map[string]string, error) {
+	err := godotenv.Load()
+	if err != nil {
+		return nil, err
+	}
+
+	envMap := make(map[string]string)
+	envMap["DB_HOST"] = os.Getenv("DB_HOST")
+	envMap["DB_PORT"] = os.Getenv("DB_PORT")
+	envMap["DB_USER"] = os.Getenv("DB_USER")
+	envMap["DB_PASSWORD"] = os.Getenv("DB_PASSWORD")
+	envMap["DB_NAME"] = os.Getenv("DB_NAME")
+	envMap["DB_SSLMODE"] = os.Getenv("DB_SSLMODE")
+
+	return envMap, nil
 }

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row v-if="meeting" justify="start">
-      <v-col cols="12" sm="8" md="8" lg="8" xl="6" xxl="5">
+      <v-col cols="12" sm="12" md="10" lg="8">
         <v-card outlined>
           <v-card-title> Meeting: {{ meeting.title }} </v-card-title>
           <v-card-text>
@@ -9,7 +9,7 @@
             <v-divider class="my-3"></v-divider>
             <div v-for="host in meeting.Hosts" :key="host.id">
               <v-chip v-if="isHostInAvailableSlots(host.id)" class="mb-2">
-                {{ host.host_name }} is available for meetings
+                Host: {{ host.host_name }}
               </v-chip>
             </div>
             <v-divider
@@ -106,6 +106,15 @@ export default {
         hour: "numeric",
         minute: "numeric",
       });
+    },
+  },
+  watch: {
+    availableTimeSlots: {
+      handler() {
+        this.selectedTimeSlotID = -1;
+        this.selectedSlot = null;
+      },
+      deep: true,
     },
   },
 };

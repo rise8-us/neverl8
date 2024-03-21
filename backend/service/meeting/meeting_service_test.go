@@ -48,6 +48,11 @@ func (m *MockCalendarService) GetAllCalendarEventsForDay(day time.Time, hosts []
 	return args.Get(0).([]model.CalendarEvent), args.Error(1)
 }
 
+func (m *MockMeetingService) UpdateMeeting(meeting *model.Meetings) error {
+	args := m.Called(meeting)
+	return args.Error(0)
+}
+
 func TestMeetingService_CreateMeeting(t *testing.T) {
 	// Create a new instance of our mock repository
 	mockRepo := new(MockMeetingService)
@@ -87,16 +92,11 @@ func TestMeetingService_GetAvailableTimeBlocks(t *testing.T) {
 	mockCalendarService := new(MockCalendarService)
 	meetingService := meetingSvc.NewMeetingService(nil, mockCalendarService)
 
-	// Create a calendar event for the host from 0900 to 1100
-	layout := "2006-01-02-15:04"
-	startTime, _ := time.Parse(layout, "09:00")
-	endTime, _ := time.Parse(layout, "11:00")
-	calendarEvents := []model.CalendarEvent{{HostID: 1, StartTime: startTime, EndTime: endTime}}
-
 	// Create a meeting with a host that has a time preference from 0900 to 1000 and 1200 to 1500 a day in advance
-	date, _ := time.Parse("2006-01-02", "2021-01-01")
+	date, _ := time.Parse("2006-01-02", time.Now().Format("2006-01-02"))
 
 	// Create sample time preferences for the host
+	layout := "2006-01-02-15:04"
 	startTimeHost1, _ := time.Parse(layout, "9:00")
 	endTimeHost1, _ := time.Parse(layout, "17:00")
 	startTimeHost2, _ := time.Parse(layout, "10:00")
@@ -108,14 +108,15 @@ func TestMeetingService_GetAvailableTimeBlocks(t *testing.T) {
 			TimePreferences: []model.TimePreference{{HostID: 2, StartTime: startTimeHost2, EndTime: endTimeHost2}}}}
 	meeting := model.Meetings{Duration: 60, Hosts: hosts}
 
-	mockCalendarService.On("GetAllCalendarEventsForDay", date, mock.Anything).Return(calendarEvents, nil)
+	// TODO: Reimplement this mock upon completion of the calendar service's google api implementation
+	// mockCalendarService.On("GetAllCalendarEventsForDay", date, mock.Anything).Return(calendarEvents, nil)
 
-	result, err := meetingService.GetAvailableTimeBlocks(meeting, date)
+	result, err := meetingService.GetAvailableTimeBlocks(&meeting, date.AddDate(0, 0, 1))
+	assert.NoError(t, err)
 
-	// Should return available times between 1100 to 1700 in a slice with 60 minute intervals due to conflict with calendar event at 0900 to 1100
+	// Should return available times between 1100 to 1700 in a slice with 60 minute intervals
 	projectedStartTime, _ := time.Parse(layout, "11:00")
 	projectedEndTime, _ := time.Parse(layout, "12:00")
-	assert.NoError(t, err)
 	for _, result := range result {
 		assert.Equal(t, model.TimePreference{HostID: 1, StartTime: projectedStartTime, EndTime: projectedEndTime}, result)
 		projectedStartTime = projectedEndTime
@@ -129,7 +130,7 @@ func TestMeetingService_GetAvailableTimeBlocks(t *testing.T) {
 
 	// Test invalid date (less than 1 day in advance)
 	date = time.Now()
-	result, err = meetingService.GetAvailableTimeBlocks(meeting, date)
+	result, err = meetingService.GetAvailableTimeBlocks(&meeting, date)
 	assert.Error(t, err)
 	assert.Empty(t, result)
 	assert.Equal(t, err.Error(), "cannot schedule a meeting less than one day in advance")

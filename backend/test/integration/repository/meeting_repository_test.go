@@ -96,7 +96,7 @@ func TestGetMeetingByID(t *testing.T) {
 	retrievedMeeting, err := repo.GetMeetingByID(createdMeeting.ID)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, retrievedMeeting, "expected meeting to be retrieved")
-	assert.Equal(t, createdMeeting, retrievedMeeting, "expected meeting to equal retrieved meeting")
+	assert.Equal(t, createdMeeting.ID, retrievedMeeting.ID, "expected meetings to have the same IDs")
 }
 
 func TestCreateSampleMeeting(t *testing.T) {

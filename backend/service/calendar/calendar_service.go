@@ -11,6 +11,6 @@ type CalendarServiceInterface interface {
 }
 
 // TODO: This function should call the google api to get the calendar for each host
-func GetAllCalendarEventsForDay(date time.Time, hosts []model.Host) ([]model.CalendarEvent, error) {
+func GetAllCalendarEventsForDay(_ time.Time, _ []model.Host) ([]model.CalendarEvent, error) {
 	return nil, nil
 }

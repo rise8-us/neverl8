@@ -53,9 +53,12 @@ export default {
       }
     },
     async handleDateSelected(date) {
+      this.selectedTimeSlotID = -1;
+      this.selectedSlot = null;
+
       try {
         const response = await axios.get(
-          `/api/meeting/time-slots?date=${date}&id=1`
+          `/api/meeting/time-slots?date=${date}&id=1` // TODO: Replace hardcoded ID with dynamic ID based on URL sent to candidate
         );
         this.availableTimeSlots = response.data;
       } catch (error) {
@@ -75,10 +78,11 @@ export default {
           candidate_name: candidateName,
           candidate_email: candidateEmail,
         });
+        alert("Meeting scheduled!");
       } catch (error) {
         console.error("Error scheduling meeting:", error);
+        alert("Error scheduling meeting");
       }
-      alert("Meeting scheduled!");
     },
   },
 };

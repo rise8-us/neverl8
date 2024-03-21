@@ -79,3 +79,10 @@ func (r *MeetingRepository) GetSampleMeetings() ([]model.SampleMeetings, error) 
 	}
 	return sampleMeetings, nil
 }
+
+func (r *MeetingRepository) UpdateMeeting(meeting *model.Meetings) error {
+	if err := r.db.Save(meeting).Error; err != nil {
+		return err
+	}
+	return nil
+}

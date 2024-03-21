@@ -22,10 +22,10 @@ func NewCLI(meetingService *meetingSvc.MeetingService, hostService *hostSvc.Host
 func (c *CLI) CreateMeetingFromCLI() {
 	// Create new Hosts
 	layout := "15:04"
-	startTime, _ := time.Parse(layout, "09:00")
-	endTime, _ := time.Parse(layout, "17:00")
-	startTime2, _ := time.Parse(layout, "11:00")
-	endTime2, _ := time.Parse(layout, "15:00")
+	startTime, _ := time.Parse(layout, "14:00") // UTC
+	endTime, _ := time.Parse(layout, "22:00")
+	startTime2, _ := time.Parse(layout, "16:00")
+	endTime2, _ := time.Parse(layout, "22:00")
 	hosts := []model.Host{
 		{HostName: "Host 1", TimePreferences: []model.TimePreference{{HostID: 1, StartTime: startTime, EndTime: endTime}}},
 		{HostName: "Host 2", TimePreferences: []model.TimePreference{{HostID: 2, StartTime: startTime2, EndTime: endTime2}}},
@@ -33,7 +33,6 @@ func (c *CLI) CreateMeetingFromCLI() {
 	host1, _ := c.hostService.CreateHost(&hosts[0])
 	host2, _ := c.hostService.CreateHost(&hosts[1])
 
-	meetingDuration := 60
 	// New Meeting to be created
 	newMeeting := &model.Meetings{
 		CandidateID: 2,
@@ -42,8 +41,6 @@ func (c *CLI) CreateMeetingFromCLI() {
 		Title:       "Example Session",
 		Description: "Discuss the future of NeverL8",
 		HasBotGuest: false,
-		StartTime:   time.Now(),
-		EndTime:     time.Now().Add(time.Minute * time.Duration(meetingDuration)),
 		Hosts:       []model.Host{*host1, *host2},
 	}
 
