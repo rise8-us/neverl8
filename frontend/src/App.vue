@@ -15,8 +15,10 @@
             :meeting="meeting"
             :availableTimeSlots="availableTimeSlots"
             @scheduleMeeting="handleScheduleMeeting"
-          /> </v-col
-      ></v-row>
+          />
+        </v-col>
+      </v-row>
+      <v-button @click="createMeeting">Create Meeting (test)</v-button>
     </v-container>
   </v-app>
 </template>
@@ -43,10 +45,35 @@ export default {
     this.fetchMeetingDetails();
   },
   methods: {
+    async createMeeting() {
+      try {
+        await axios.post("/api/meeting", {
+          title: "Test Meeting",
+          duration: 60,
+          description: "This is a test meeting",
+          calendar: "test",
+          Hosts: [
+            {
+              host_name: "Test Host",
+              time_preferences: [
+                {
+                  id: 1,
+                  host_id: 1,
+                  start_time: "2024-03-26T09:00:00Z",
+                  end_time: "2024-03-26T20:00:00Z",
+                },
+              ],
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error creating meeting:", error);
+      }
+    },
     async fetchMeetingDetails() {
       // Fetch meeting details based on hardcoded ID
       try {
-        const response = await axios.get(`/api/meeting?id=1`);
+        const response = await axios.get(`/api/meeting/1`);
         this.meeting = response.data;
       } catch (error) {
         console.error("Error fetching meeting:", error);
@@ -58,7 +85,7 @@ export default {
 
       try {
         const response = await axios.get(
-          `/api/meeting/time-slots?date=${date}&id=1` // TODO: Replace hardcoded ID with dynamic ID based on URL sent to candidate
+          `/api/meeting/time-slots/1?date=${date}` // TODO: Replace hardcoded ID with dynamic ID based on URL sent to candidate
         );
         this.availableTimeSlots = response.data;
       } catch (error) {

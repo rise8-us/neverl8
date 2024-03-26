@@ -1,46 +1,18 @@
-package host_test
+package tests_test
 
 import (
 	"testing"
 	"time"
 
 	"github.com/rise8-us/neverl8/host"
+	"github.com/rise8-us/neverl8/host/tests"
 	"github.com/rise8-us/neverl8/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
-type MockHostRepository struct {
-	mock.Mock
-}
-
-func (m *MockHostRepository) CreateHost(host *model.Host) (*model.Host, error) {
-	args := m.Called(host)
-	return args.Get(0).(*model.Host), args.Error(1)
-}
-
-func (m *MockHostRepository) GetAllHosts() ([]model.Host, error) {
-	args := m.Called()
-	return args.Get(0).([]model.Host), args.Error(1)
-}
-
-func (m *MockHostRepository) GetHostByID(id uint) (*model.Host, error) {
-	args := m.Called(id)
-	return args.Get(0).(*model.Host), args.Error(1)
-}
-
-func (m *MockHostRepository) CreateTimePreference(timePreference *model.TimePreference) (*model.TimePreference, error) {
-	args := m.Called(timePreference)
-	return args.Get(0).(*model.TimePreference), args.Error(1)
-}
-
-func (m *MockHostRepository) CreateCalendar(calendar *model.Calendar, host *model.Host) (*model.Calendar, error) {
-	args := m.Called(calendar, host)
-	return args.Get(0).(*model.Calendar), args.Error(1)
-}
-
 func TestHostService_CreateHost(t *testing.T) {
-	mockRepo := new(MockHostRepository)
+	mockRepo := new(tests.MockHostService)
 	hostService := host.NewHostService(mockRepo)
 
 	host := &model.Host{}
@@ -54,7 +26,7 @@ func TestHostService_CreateHost(t *testing.T) {
 }
 
 func TestHostService_GetAllHosts(t *testing.T) {
-	mockRepo := new(MockHostRepository)
+	mockRepo := new(tests.MockHostService)
 	hostService := host.NewHostService(mockRepo)
 
 	hosts := []model.Host{{}, {}}
@@ -68,7 +40,7 @@ func TestHostService_GetAllHosts(t *testing.T) {
 }
 
 func TestHostService_GetHostByID(t *testing.T) {
-	mockRepo := new(MockHostRepository)
+	mockRepo := new(tests.MockHostService)
 	hostService := host.NewHostService(mockRepo)
 
 	host := &model.Host{}
@@ -82,7 +54,7 @@ func TestHostService_GetHostByID(t *testing.T) {
 }
 
 func TestHostService_CreateTimePreference(t *testing.T) {
-	mockRepo := new(MockHostRepository)
+	mockRepo := new(tests.MockHostService)
 	hostService := host.NewHostService(mockRepo)
 
 	layout := "15:04"
@@ -101,7 +73,7 @@ func TestHostService_CreateTimePreference(t *testing.T) {
 }
 
 func TestHostService_CreateCalendar(t *testing.T) {
-	mockRepo := new(MockHostRepository)
+	mockRepo := new(tests.MockHostService)
 	hostService := host.NewHostService(mockRepo)
 
 	calendar := &model.Calendar{}

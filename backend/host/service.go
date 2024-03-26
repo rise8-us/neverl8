@@ -6,6 +6,14 @@ import (
 	"github.com/rise8-us/neverl8/model"
 )
 
+type HostRepositoryInterface interface {
+	CreateHost(host *model.Host) (*model.Host, error)
+	GetHostByID(id uint) (*model.Host, error)
+	GetAllHosts() ([]model.Host, error)
+	CreateTimePreference(timePreference *model.TimePreference) (*model.TimePreference, error)
+	CreateCalendar(calendar *model.Calendar, host *model.Host) (*model.Calendar, error)
+}
+
 type HostService struct {
 	hostRepo HostRepositoryInterface
 }

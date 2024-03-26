@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMeetingService_CreateMeeting(t *testing.T) {
+func Test_CreateMeeting(t *testing.T) {
 	// Create a new instance of our mock repository
 	mockRepo := new(tests.MockMeetingService)
 	meetingService := meeting.NewMeetingService(mockRepo, nil)
@@ -28,7 +28,7 @@ func TestMeetingService_CreateMeeting(t *testing.T) {
 	mockRepo.AssertExpectations(t)
 }
 
-func TestMeetingService_GetAllMeetings(t *testing.T) {
+func Test_GetAllMeetings(t *testing.T) {
 	mockRepo := new(tests.MockMeetingService)
 	meetingService := meeting.NewMeetingService(mockRepo, nil)
 
@@ -45,7 +45,49 @@ func TestMeetingService_GetAllMeetings(t *testing.T) {
 	mockRepo.AssertExpectations(t)
 }
 
-func TestMeetingService_GetAvailableTimeBlocks(t *testing.T) {
+func Test_GetMeetingByID(t *testing.T) {
+	mockRepo := new(tests.MockMeetingService)
+	meetingService := meeting.NewMeetingService(mockRepo, nil)
+
+	meeting := &model.Meetings{ID: 1, Duration: 60, Title: "Test Meeting"}
+	mockRepo.On("GetMeetingByID", uint(1)).Return(meeting, nil)
+
+	result, err := meetingService.GetMeetingByID(uint(1))
+
+	assert.NoError(t, err)
+	assert.Equal(t, meeting, result)
+	mockRepo.AssertExpectations(t)
+}
+
+func Test_GetMeetingsByDate(t *testing.T) {
+	mockRepo := new(tests.MockMeetingService)
+	meetingService := meeting.NewMeetingService(mockRepo, nil)
+
+	date := time.Now().Format("2006-01-02")
+	meetings := []model.Meetings{{}, {}}
+	mockRepo.On("GetMeetingsByDate", date).Return(meetings, nil)
+
+	result, err := meetingService.GetMeetingsByDate(date)
+
+	assert.NoError(t, err)
+	assert.Equal(t, meetings, result)
+	mockRepo.AssertExpectations(t)
+}
+
+func Test_UpdateMeeting(t *testing.T) {
+	mockRepo := new(tests.MockMeetingService)
+	meetingService := meeting.NewMeetingService(mockRepo, nil)
+
+	meeting := &model.Meetings{ID: 1, Duration: 60, Title: "Test Meeting"}
+	mockRepo.On("UpdateMeeting", meeting).Return(nil)
+
+	err := meetingService.UpdateMeeting(meeting)
+
+	assert.NoError(t, err)
+	mockRepo.AssertExpectations(t)
+}
+
+func Test_GetAvailableTimeBlocks(t *testing.T) {
 	mockRepo := new(tests.MockMeetingService)
 	meetingService := meeting.NewMeetingService(mockRepo, nil)
 

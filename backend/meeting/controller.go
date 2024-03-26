@@ -11,8 +11,17 @@ import (
 	"github.com/rise8-us/neverl8/model"
 )
 
+type MeetingServiceInterface interface {
+	CreateMeeting(meeting *model.Meetings) (*model.Meetings, error)
+	GetAllMeetings() ([]model.Meetings, error)
+	GetMeetingByID(id uint) (*model.Meetings, error)
+	GetMeetingsByDate(date string) ([]model.Meetings, error)
+	GetAvailableTimeBlocks(meeting *model.Meetings, date time.Time) ([]model.TimePreference, error)
+	UpdateMeeting(meeting *model.Meetings) error
+}
+
 type MeetingController struct {
-	meetingService *MeetingService
+	meetingService MeetingServiceInterface
 }
 
 type UpdateMeetingTimeRequest struct {
@@ -22,8 +31,8 @@ type UpdateMeetingTimeRequest struct {
 	CandidateEmail string               `json:"candidate_email"`
 }
 
-func NewMeetingController(meetingService *MeetingService) *MeetingController {
-	return &MeetingController{meetingService}
+func NewMeetingController(meetingService MeetingServiceInterface) *MeetingController {
+	return &MeetingController{meetingService: meetingService}
 }
 
 func (mc *MeetingController) RegisterRoutes() chi.Router {
@@ -33,7 +42,7 @@ func (mc *MeetingController) RegisterRoutes() chi.Router {
 	router.Get("/meeting/{id}", mc.getMeetingByID)
 	router.Get("/meeting/time-slots/{id}", mc.getAvailableTimeBlocks)
 	router.Post("/meeting", mc.createMeeting)
-	router.Post("/meeting/schedule", mc.updateMeetingTime)
+	router.Put("/meeting/schedule", mc.updateMeetingTime)
 
 	return router
 }

@@ -5,14 +5,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type HostRepositoryInterface interface {
-	CreateHost(host *model.Host) (*model.Host, error)
-	GetHostByID(id uint) (*model.Host, error)
-	GetAllHosts() ([]model.Host, error)
-	CreateTimePreference(timePreference *model.TimePreference) (*model.TimePreference, error)
-	CreateCalendar(calendar *model.Calendar, host *model.Host) (*model.Calendar, error)
-}
-
 // HostRepository handles CRUD operations for hosts and their time preferences.
 type HostRepository struct {
 	db *gorm.DB
