@@ -10,10 +10,15 @@ repos:
     rev: v0.5.0
     hooks:
       - id: go-fmt
+        args: ["./backend/..."]
       - id: go-imports
+        args: ["./backend/..."]
       - id: no-go-testing
+        args: ["./backend/..."]
       - id: golangci-lint
+        args: ["./backend/..."]
       - id: go-unit-tests
+        args: ["./backend/..."]
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.19.1
     hooks:
