@@ -1,4 +1,4 @@
-package repository
+package meeting
 
 import (
 	"time"

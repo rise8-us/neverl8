@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/rise8-us/neverl8/host"
 	"github.com/rise8-us/neverl8/model"
-	hostSvc "github.com/rise8-us/neverl8/service/host"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -41,7 +41,7 @@ func (m *MockHostRepository) CreateCalendar(calendar *model.Calendar, host *mode
 
 func TestHostService_CreateHost(t *testing.T) {
 	mockRepo := new(MockHostRepository)
-	hostService := hostSvc.NewHostService(mockRepo)
+	hostService := host.NewHostService(mockRepo)
 
 	host := &model.Host{}
 	mockRepo.On("CreateHost", host).Return(host, nil)
@@ -55,7 +55,7 @@ func TestHostService_CreateHost(t *testing.T) {
 
 func TestHostService_GetAllHosts(t *testing.T) {
 	mockRepo := new(MockHostRepository)
-	hostService := hostSvc.NewHostService(mockRepo)
+	hostService := host.NewHostService(mockRepo)
 
 	hosts := []model.Host{{}, {}}
 	mockRepo.On("GetAllHosts").Return(hosts, nil)
@@ -69,7 +69,7 @@ func TestHostService_GetAllHosts(t *testing.T) {
 
 func TestHostService_GetHostByID(t *testing.T) {
 	mockRepo := new(MockHostRepository)
-	hostService := hostSvc.NewHostService(mockRepo)
+	hostService := host.NewHostService(mockRepo)
 
 	host := &model.Host{}
 	mockRepo.On("GetHostByID", uint(1)).Return(host, nil)
@@ -83,7 +83,7 @@ func TestHostService_GetHostByID(t *testing.T) {
 
 func TestHostService_CreateTimePreference(t *testing.T) {
 	mockRepo := new(MockHostRepository)
-	hostService := hostSvc.NewHostService(mockRepo)
+	hostService := host.NewHostService(mockRepo)
 
 	layout := "15:04"
 	startTime, _ := time.Parse(layout, "09:00")
@@ -102,7 +102,7 @@ func TestHostService_CreateTimePreference(t *testing.T) {
 
 func TestHostService_CreateCalendar(t *testing.T) {
 	mockRepo := new(MockHostRepository)
-	hostService := hostSvc.NewHostService(mockRepo)
+	hostService := host.NewHostService(mockRepo)
 
 	calendar := &model.Calendar{}
 	host := &model.Host{}

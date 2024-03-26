@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/rise8-us/neverl8/calendar"
 	"github.com/rise8-us/neverl8/model"
-	"github.com/rise8-us/neverl8/service/calendar"
 )
 
 type MeetingRepositoryInterface interface {
@@ -17,16 +17,15 @@ type MeetingRepositoryInterface interface {
 }
 
 type MeetingService struct {
-	meetingRepo     MeetingRepositoryInterface
-	calendarService calendar.CalendarServiceInterface
+	meetingRepo MeetingRepositoryInterface
 }
 
 func NewMeetingService(meetingRepo MeetingRepositoryInterface, calendarService calendar.CalendarServiceInterface) *MeetingService {
-	return &MeetingService{meetingRepo: meetingRepo, calendarService: calendarService}
+	return &MeetingService{meetingRepo: meetingRepo}
 }
 
-func (s *MeetingService) CreateMeeting(meetings *model.Meetings) (*model.Meetings, error) {
-	return s.meetingRepo.CreateMeeting(meetings)
+func (s *MeetingService) CreateMeeting(meeting *model.Meetings) (*model.Meetings, error) {
+	return s.meetingRepo.CreateMeeting(meeting)
 }
 
 func (s *MeetingService) GetAllMeetings() ([]model.Meetings, error) {

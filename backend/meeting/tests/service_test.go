@@ -1,62 +1,19 @@
-package meeting_test
+package tests_test
 
 import (
 	"testing"
 	"time"
 
+	"github.com/rise8-us/neverl8/meeting"
+	"github.com/rise8-us/neverl8/meeting/tests"
 	"github.com/rise8-us/neverl8/model"
-	meetingSvc "github.com/rise8-us/neverl8/service/meeting"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
-
-type MockMeetingService struct {
-	mock.Mock
-}
-
-type MockCalendarService struct {
-	mock.Mock
-}
-
-func (m *MockMeetingService) CreateMeeting(meeting *model.Meetings) (*model.Meetings, error) {
-	args := m.Called(meeting)
-	return args.Get(0).(*model.Meetings), args.Error(1)
-}
-
-func (m *MockMeetingService) GetAllMeetings() ([]model.Meetings, error) {
-	args := m.Called()
-	return args.Get(0).([]model.Meetings), args.Error(1)
-}
-
-func (m *MockMeetingService) GetMeetingByID(id uint) (*model.Meetings, error) {
-	args := m.Called(id)
-	return args.Get(0).(*model.Meetings), args.Error(1)
-}
-
-func (m *MockMeetingService) GetMeetingsByDate(date string) ([]model.Meetings, error) {
-	args := m.Called(date)
-	return args.Get(0).([]model.Meetings), args.Error(1)
-}
-
-func (m *MockMeetingService) GetAvailableTimeBlocks(meeting *model.Meetings, day time.Time) ([]model.TimePreference, error) {
-	args := m.Called(meeting, day)
-	return args.Get(0).([]model.TimePreference), args.Error(1)
-}
-
-func (m *MockCalendarService) GetAllCalendarEventsForDay(day time.Time, hosts []model.Host) ([]model.CalendarEvent, error) {
-	args := m.Called(day, hosts)
-	return args.Get(0).([]model.CalendarEvent), args.Error(1)
-}
-
-func (m *MockMeetingService) UpdateMeeting(meeting *model.Meetings) error {
-	args := m.Called(meeting)
-	return args.Error(0)
-}
 
 func TestMeetingService_CreateMeeting(t *testing.T) {
 	// Create a new instance of our mock repository
-	mockRepo := new(MockMeetingService)
-	meetingService := meetingSvc.NewMeetingService(mockRepo, nil)
+	mockRepo := new(tests.MockMeetingService)
+	meetingService := meeting.NewMeetingService(mockRepo, nil)
 
 	// Setup expectations
 	meeting := &model.Meetings{}
@@ -72,8 +29,8 @@ func TestMeetingService_CreateMeeting(t *testing.T) {
 }
 
 func TestMeetingService_GetAllMeetings(t *testing.T) {
-	mockRepo := new(MockMeetingService)
-	meetingService := meetingSvc.NewMeetingService(mockRepo, nil)
+	mockRepo := new(tests.MockMeetingService)
+	meetingService := meeting.NewMeetingService(mockRepo, nil)
 
 	// Setup expectations
 	meetings := []model.Meetings{{}, {}}
@@ -89,8 +46,8 @@ func TestMeetingService_GetAllMeetings(t *testing.T) {
 }
 
 func TestMeetingService_GetAvailableTimeBlocks(t *testing.T) {
-	mockCalendarService := new(MockCalendarService)
-	meetingService := meetingSvc.NewMeetingService(nil, mockCalendarService)
+	mockRepo := new(tests.MockMeetingService)
+	meetingService := meeting.NewMeetingService(mockRepo, nil)
 
 	// Create a meeting with a host that has a time preference from 0900 to 1000 and 1200 to 1500 a day in advance
 	date, _ := time.Parse("2006-01-02", time.Now().Format("2006-01-02"))
@@ -134,6 +91,4 @@ func TestMeetingService_GetAvailableTimeBlocks(t *testing.T) {
 	assert.Error(t, err)
 	assert.Empty(t, result)
 	assert.Equal(t, err.Error(), "cannot schedule a meeting less than one day in advance")
-
-	mockCalendarService.AssertExpectations(t)
 }

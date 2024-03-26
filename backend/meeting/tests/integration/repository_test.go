@@ -1,13 +1,42 @@
-package repository_test
+package integration
 
 import (
+	"os"
 	"testing"
 	"time"
 
+	"github.com/rise8-us/neverl8/meeting"
 	"github.com/rise8-us/neverl8/model"
-	"github.com/rise8-us/neverl8/repository"
+	testutil "github.com/rise8-us/neverl8/test_config"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
+
+var db *gorm.DB
+
+// TestMain sets up the test database
+func TestMain(m *testing.M) {
+	testDB := testutil.SetupTestDB()
+	db = testDB.DB
+
+	code := runTests(m, testDB.TearDown)
+	os.Exit(code)
+}
+
+// While the m.Run() function already runs all the tests, os.Exit() does not respect the defer method.
+// This function is used to ensure that the test database is torn down after all tests are run.
+func runTests(m *testing.M, tearDown func()) int {
+	defer tearDown()
+	return m.Run()
+}
+
+func GetSampleHosts() []model.Host {
+	hosts := &[]model.Host{
+		{HostName: "Host 1", ID: 1, LastMeetingTime: time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)},
+		{HostName: "Host 2", ID: 2, LastMeetingTime: time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC)},
+	}
+	return *hosts
+}
 
 func GetSampleMeeting() *model.Meetings {
 	// Create new Hosts
@@ -38,7 +67,7 @@ func TestCreateMeeting(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewMeetingRepository(db)
+	repo := meeting.NewMeetingRepository(db)
 
 	meeting := GetSampleMeeting()
 
@@ -63,7 +92,7 @@ func TestGetAllMeetings(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewMeetingRepository(db)
+	repo := meeting.NewMeetingRepository(db)
 
 	meeting := GetSampleMeeting()
 
@@ -84,7 +113,7 @@ func TestGetMeetingByID(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewMeetingRepository(db)
+	repo := meeting.NewMeetingRepository(db)
 
 	meeting := GetSampleMeeting()
 
@@ -104,7 +133,7 @@ func TestCreateSampleMeeting(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.SampleMeetings{})
 	})
 
-	repo := repository.NewMeetingRepository(db)
+	repo := meeting.NewMeetingRepository(db)
 
 	sampleMeeting := &model.SampleMeetings{Title: "Example Sample Meeting", Description: "Description of the Sample Meeting", Duration: 60}
 	createdSampleMeeting := repo.CreateSampleMeeting(sampleMeeting)
@@ -118,7 +147,7 @@ func TestGetSampleMeetings(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.SampleMeetings{})
 	})
 
-	repo := repository.NewMeetingRepository(db)
+	repo := meeting.NewMeetingRepository(db)
 
 	sampleMeeting := &model.SampleMeetings{Title: "Example Sample Meeting", Description: "Description of the Sample Meeting", Duration: 60}
 	createdSampleMeeting := repo.CreateSampleMeeting(sampleMeeting)
@@ -137,7 +166,7 @@ func TestCreateMeetingWithSampleMeeting(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewMeetingRepository(db)
+	repo := meeting.NewMeetingRepository(db)
 
 	// Create a sample meeting
 	sampleMeeting := &model.SampleMeetings{Title: "Example Sample Meeting", Description: "Description of the Sample Meeting", Duration: 60}

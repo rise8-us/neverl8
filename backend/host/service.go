@@ -4,14 +4,13 @@ import (
 	"fmt"
 
 	"github.com/rise8-us/neverl8/model"
-	repository "github.com/rise8-us/neverl8/repository"
 )
 
 type HostService struct {
-	hostRepo repository.HostRepositoryInterface
+	hostRepo HostRepositoryInterface
 }
 
-func NewHostService(hostRepo repository.HostRepositoryInterface) *HostService {
+func NewHostService(hostRepo HostRepositoryInterface) *HostService {
 	return &HostService{hostRepo}
 }
 

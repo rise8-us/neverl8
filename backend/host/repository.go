@@ -1,4 +1,4 @@
-package repository
+package host
 
 import (
 	"github.com/rise8-us/neverl8/model"
