@@ -1,13 +1,34 @@
-package repository_test
+package integration
 
 import (
+	"os"
 	"testing"
 	"time"
 
+	"github.com/rise8-us/neverl8/host"
 	"github.com/rise8-us/neverl8/model"
-	"github.com/rise8-us/neverl8/repository"
+	testutil "github.com/rise8-us/neverl8/test_config"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
+
+var db *gorm.DB
+
+// TestMain sets up the test database
+func TestMain(m *testing.M) {
+	testDB := testutil.SetupTestDB()
+	db = testDB.DB
+
+	code := runTests(m, testDB.TearDown)
+	os.Exit(code)
+}
+
+// While the m.Run() function already runs all the tests, os.Exit() does not respect the defer method.
+// This function is used to ensure that the test database is torn down after all tests are run.
+func runTests(m *testing.M, tearDown func()) int {
+	defer tearDown()
+	return m.Run()
+}
 
 func GetSampleHosts() []model.Host {
 	hosts := &[]model.Host{
@@ -22,7 +43,7 @@ func TestCreateHost(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewHostRepository(db)
+	repo := host.NewHostRepository(db)
 
 	hosts := GetSampleHosts()
 
@@ -44,7 +65,7 @@ func TestGetHostByID(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewHostRepository(db)
+	repo := host.NewHostRepository(db)
 
 	hosts := GetSampleHosts()
 
@@ -53,10 +74,10 @@ func TestGetHostByID(t *testing.T) {
 	assert.NoError(t, err, "expected no error")
 
 	// Get Host 1
-	host, err := repo.GetHostByID(createdHost.ID)
+	retrievedHost, err := repo.GetHostByID(createdHost.ID)
 	assert.NoError(t, err, "expected no error")
-	assert.NotNil(t, host, "expected host to be retrieved")
-	assert.Equal(t, createdHost.ID, host.ID, "expected host to equal retrieved host")
+	assert.NotNil(t, retrievedHost, "expected host to be retrieved")
+	assert.Equal(t, createdHost.ID, retrievedHost.ID, "expected host to equal retrieved host")
 }
 
 func TestGetAllHosts(t *testing.T) {
@@ -64,7 +85,7 @@ func TestGetAllHosts(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewHostRepository(db)
+	repo := host.NewHostRepository(db)
 
 	hosts := GetSampleHosts()
 
@@ -88,7 +109,7 @@ func TestCreateHostTimePreferences(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewHostRepository(db)
+	repo := host.NewHostRepository(db)
 
 	hosts := GetSampleHosts()
 
@@ -114,7 +135,7 @@ func TestGetHostTimePreferences(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Host{})
 	})
 
-	repo := repository.NewHostRepository(db)
+	repo := host.NewHostRepository(db)
 
 	hosts := GetSampleHosts()
 
@@ -148,7 +169,7 @@ func TestCreateHostCalendar(t *testing.T) {
 		db.Where("1 = 1").Delete(&model.Calendar{})
 	})
 
-	repo := repository.NewHostRepository(db)
+	repo := host.NewHostRepository(db)
 
 	hosts := GetSampleHosts()
 	calendar := model.Calendar{GoogleCalendarID: "johndoe@rise8.us"}
