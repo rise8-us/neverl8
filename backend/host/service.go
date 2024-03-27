@@ -14,6 +14,7 @@ type HostRepositoryInterface interface {
 	CreateCalendar(calendar *model.Calendar, host *model.Host) (*model.Calendar, error)
 }
 
+// test
 type HostService struct {
 	hostRepo HostRepositoryInterface
 }

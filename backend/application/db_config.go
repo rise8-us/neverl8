@@ -20,7 +20,6 @@ func (a *App) configureDB() {
 }
 
 func (a *App) migrateDBUp() {
-
 	sourcePath := "file://db/migrations"
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s", dbUser, dbPassword, dbHost, dbPort, dbName, dbSSLMode)
 	m, err := migrate.New(sourcePath, dbURL)

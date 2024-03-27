@@ -15,13 +15,13 @@ func TestHostService_CreateHost(t *testing.T) {
 	mockRepo := new(tests.MockHostService)
 	hostService := host.NewHostService(mockRepo)
 
-	host := &model.Host{}
-	mockRepo.On("CreateHost", host).Return(host, nil)
+	sampleHost := &model.Host{}
+	mockRepo.On("CreateHost", sampleHost).Return(sampleHost, nil)
 
-	result, err := hostService.CreateHost(host)
+	result, err := hostService.CreateHost(sampleHost)
 
 	assert.NoError(t, err, "expected no error")
-	assert.Equal(t, host, result, "expected host to be created")
+	assert.Equal(t, sampleHost, result, "expected host to be created")
 	mockRepo.AssertExpectations(t)
 }
 
@@ -43,13 +43,13 @@ func TestHostService_GetHostByID(t *testing.T) {
 	mockRepo := new(tests.MockHostService)
 	hostService := host.NewHostService(mockRepo)
 
-	host := &model.Host{}
-	mockRepo.On("GetHostByID", uint(1)).Return(host, nil)
+	sampleHost := &model.Host{}
+	mockRepo.On("GetHostByID", uint(1)).Return(sampleHost, nil)
 
 	result, err := hostService.GetHostByID(1)
 
 	assert.NoError(t, err, "expected no error")
-	assert.Equal(t, host, result, "expected host to be retrieved")
+	assert.Equal(t, sampleHost, result, "expected host to be retrieved")
 	mockRepo.AssertExpectations(t)
 }
 
@@ -77,10 +77,10 @@ func TestHostService_CreateCalendar(t *testing.T) {
 	hostService := host.NewHostService(mockRepo)
 
 	calendar := &model.Calendar{}
-	host := &model.Host{}
-	mockRepo.On("CreateCalendar", calendar, host).Return(calendar, nil)
+	sampleHost := &model.Host{}
+	mockRepo.On("CreateCalendar", calendar, sampleHost).Return(calendar, nil)
 
-	result, err := hostService.CreateCalendar(calendar, host)
+	result, err := hostService.CreateCalendar(calendar, sampleHost)
 
 	assert.NoError(t, err, "expected no error")
 	assert.Equal(t, calendar, result, "expected calendar to be created successfully")

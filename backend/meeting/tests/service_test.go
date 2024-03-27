@@ -16,15 +16,15 @@ func Test_CreateMeeting(t *testing.T) {
 	meetingService := meeting.NewMeetingService(mockRepo, nil)
 
 	// Setup expectations
-	meeting := &model.Meetings{}
-	mockRepo.On("CreateMeeting", meeting).Return(meeting, nil)
+	sampleMeeting := &model.Meetings{}
+	mockRepo.On("CreateMeeting", sampleMeeting).Return(sampleMeeting, nil)
 
 	// Call the service method
-	result, err := meetingService.CreateMeeting(meeting)
+	result, err := meetingService.CreateMeeting(sampleMeeting)
 
 	// Assert expectations
 	assert.NoError(t, err)
-	assert.Equal(t, meeting, result)
+	assert.Equal(t, sampleMeeting, result)
 	mockRepo.AssertExpectations(t)
 }
 
@@ -49,13 +49,13 @@ func Test_GetMeetingByID(t *testing.T) {
 	mockRepo := new(tests.MockMeetingService)
 	meetingService := meeting.NewMeetingService(mockRepo, nil)
 
-	meeting := &model.Meetings{ID: 1, Duration: 60, Title: "Test Meeting"}
-	mockRepo.On("GetMeetingByID", uint(1)).Return(meeting, nil)
+	sampleMeeting := &model.Meetings{ID: 1, Duration: 60, Title: "Test Meeting"}
+	mockRepo.On("GetMeetingByID", uint(1)).Return(sampleMeeting, nil)
 
 	result, err := meetingService.GetMeetingByID(uint(1))
 
 	assert.NoError(t, err)
-	assert.Equal(t, meeting, result)
+	assert.Equal(t, sampleMeeting, result)
 	mockRepo.AssertExpectations(t)
 }
 
@@ -78,10 +78,10 @@ func Test_UpdateMeeting(t *testing.T) {
 	mockRepo := new(tests.MockMeetingService)
 	meetingService := meeting.NewMeetingService(mockRepo, nil)
 
-	meeting := &model.Meetings{ID: 1, Duration: 60, Title: "Test Meeting"}
-	mockRepo.On("UpdateMeeting", meeting).Return(nil)
+	sampleMeeting := &model.Meetings{ID: 1, Duration: 60, Title: "Test Meeting"}
+	mockRepo.On("UpdateMeeting", sampleMeeting).Return(nil)
 
-	err := meetingService.UpdateMeeting(meeting)
+	err := meetingService.UpdateMeeting(sampleMeeting)
 
 	assert.NoError(t, err)
 	mockRepo.AssertExpectations(t)
@@ -105,12 +105,12 @@ func Test_GetAvailableTimeBlocks(t *testing.T) {
 		TimePreferences: []model.TimePreference{{HostID: 1, StartTime: startTimeHost1, EndTime: endTimeHost1}}},
 		{ID: 2, LastMeetingTime: date.AddDate(0, 0, -1),
 			TimePreferences: []model.TimePreference{{HostID: 2, StartTime: startTimeHost2, EndTime: endTimeHost2}}}}
-	meeting := model.Meetings{Duration: 60, Hosts: hosts}
+	sampleMeeting := model.Meetings{Duration: 60, Hosts: hosts}
 
 	// TODO: Reimplement this mock upon completion of the calendar service's google api implementation
 	// mockCalendarService.On("GetAllCalendarEventsForDay", date, mock.Anything).Return(calendarEvents, nil)
 
-	result, err := meetingService.GetAvailableTimeBlocks(&meeting, date.AddDate(0, 0, 1))
+	result, err := meetingService.GetAvailableTimeBlocks(&sampleMeeting, date.AddDate(0, 0, 1))
 	assert.NoError(t, err)
 
 	// Should return available times between 1100 to 1700 in a slice with 60 minute intervals
@@ -129,7 +129,7 @@ func Test_GetAvailableTimeBlocks(t *testing.T) {
 
 	// Test invalid date (less than 1 day in advance)
 	date = time.Now()
-	result, err = meetingService.GetAvailableTimeBlocks(&meeting, date)
+	result, err = meetingService.GetAvailableTimeBlocks(&sampleMeeting, date)
 	assert.Error(t, err)
 	assert.Empty(t, result)
 	assert.Equal(t, err.Error(), "cannot schedule a meeting less than one day in advance")

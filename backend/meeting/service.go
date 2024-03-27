@@ -20,7 +20,7 @@ type MeetingService struct {
 	meetingRepo MeetingRepositoryInterface
 }
 
-func NewMeetingService(meetingRepo MeetingRepositoryInterface, calendarService calendar.CalendarServiceInterface) *MeetingService {
+func NewMeetingService(meetingRepo MeetingRepositoryInterface, _ calendar.CalendarServiceInterface) *MeetingService {
 	return &MeetingService{meetingRepo: meetingRepo}
 }
 

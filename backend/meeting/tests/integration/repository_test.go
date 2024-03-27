@@ -45,7 +45,7 @@ func GetSampleMeeting() *model.Meetings {
 	currentTime := time.Now().UTC().Truncate(time.Second)
 	meetingDuration := 60
 	// New Meeting to be created
-	meeting := &model.Meetings{
+	sampleMeeting := &model.Meetings{
 		CandidateID: 2,
 		Calendar:    "Example Calendar",
 		Duration:    60,
@@ -58,7 +58,7 @@ func GetSampleMeeting() *model.Meetings {
 		Hosts:       hosts,
 	}
 
-	return meeting
+	return sampleMeeting
 }
 
 func TestCreateMeeting(t *testing.T) {
@@ -69,21 +69,21 @@ func TestCreateMeeting(t *testing.T) {
 
 	repo := meeting.NewMeetingRepository(db)
 
-	meeting := GetSampleMeeting()
+	sampleMeeting := GetSampleMeeting()
 
 	// Create Meeting
-	createdMeeting, err := repo.CreateMeeting(meeting)
+	createdMeeting, err := repo.CreateMeeting(sampleMeeting)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, createdMeeting, "expected meeting to be created")
-	assert.Equal(t, uint(1), meeting.ID, "expected meeting id to be 1")
-	assert.Equal(t, meeting.CandidateID, createdMeeting.CandidateID, "expected candidate id to match")
-	assert.Equal(t, createdMeeting.Calendar, meeting.Calendar, "expected calendar to match")
-	assert.Equal(t, createdMeeting.Duration, meeting.Duration, "expected duration to match")
-	assert.Equal(t, createdMeeting.Title, meeting.Title, "expected title to match")
-	assert.Equal(t, createdMeeting.Description, meeting.Description, "expected description to match")
-	assert.Equal(t, createdMeeting.HasBotGuest, meeting.HasBotGuest, "expected has bot guest to match")
-	assert.Equal(t, createdMeeting.StartTime, meeting.StartTime, "expected start time to match")
-	assert.Equal(t, createdMeeting.EndTime, meeting.EndTime, "expected end time to match")
+	assert.Equal(t, uint(1), sampleMeeting.ID, "expected meeting id to be 1")
+	assert.Equal(t, sampleMeeting.CandidateID, createdMeeting.CandidateID, "expected candidate id to match")
+	assert.Equal(t, createdMeeting.Calendar, sampleMeeting.Calendar, "expected calendar to match")
+	assert.Equal(t, createdMeeting.Duration, sampleMeeting.Duration, "expected duration to match")
+	assert.Equal(t, createdMeeting.Title, sampleMeeting.Title, "expected title to match")
+	assert.Equal(t, createdMeeting.Description, sampleMeeting.Description, "expected description to match")
+	assert.Equal(t, createdMeeting.HasBotGuest, sampleMeeting.HasBotGuest, "expected has bot guest to match")
+	assert.Equal(t, createdMeeting.StartTime, sampleMeeting.StartTime, "expected start time to match")
+	assert.Equal(t, createdMeeting.EndTime, sampleMeeting.EndTime, "expected end time to match")
 }
 
 func TestGetAllMeetings(t *testing.T) {
@@ -94,10 +94,10 @@ func TestGetAllMeetings(t *testing.T) {
 
 	repo := meeting.NewMeetingRepository(db)
 
-	meeting := GetSampleMeeting()
+	sampleMeeting := GetSampleMeeting()
 
 	// Create Meeting
-	_, err := repo.CreateMeeting(meeting)
+	_, err := repo.CreateMeeting(sampleMeeting)
 	assert.NoError(t, err, "expected no error")
 
 	// Get all meetings
@@ -115,10 +115,10 @@ func TestGetMeetingByID(t *testing.T) {
 
 	repo := meeting.NewMeetingRepository(db)
 
-	meeting := GetSampleMeeting()
+	sampleMeeting := GetSampleMeeting()
 
 	// Create Meeting
-	createdMeeting, err := repo.CreateMeeting(meeting)
+	createdMeeting, err := repo.CreateMeeting(sampleMeeting)
 	assert.NoError(t, err, "expected no error")
 
 	// Get Meeting 1
@@ -179,7 +179,7 @@ func TestCreateMeetingWithSampleMeeting(t *testing.T) {
 	currentTime := time.Now().UTC().Truncate(time.Second)
 	meetingDuration := 60
 	// New Meeting to be created
-	meeting := &model.Meetings{
+	newMeeting := &model.Meetings{
 		CandidateID: 2,
 		Calendar:    "Example Calendar",
 		Duration:    sampleMeeting.Duration, // Utilize sample meeting values
@@ -193,11 +193,11 @@ func TestCreateMeetingWithSampleMeeting(t *testing.T) {
 	}
 
 	// Create Meeting
-	createdMeeting, err := repo.CreateMeeting(meeting)
+	createdMeeting, err := repo.CreateMeeting(newMeeting)
 	assert.NoError(t, err, "expected no error")
 	assert.NotNil(t, createdMeeting, "expected meeting to be created")
 	assert.Equal(t, createdMeeting.Duration, sampleMeeting.Duration, "expected duration to match")
 	assert.Equal(t, createdMeeting.Title, sampleMeeting.Title, "expected title to match")
 	assert.Equal(t, createdMeeting.Description, sampleMeeting.Description, "expected description to match")
-	assert.Equal(t, meeting, createdMeeting, "expected meeting to equal retrieved meeting")
+	assert.Equal(t, newMeeting, createdMeeting, "expected meeting to equal retrieved meeting")
 }

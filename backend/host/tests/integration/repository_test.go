@@ -74,10 +74,10 @@ func TestGetHostByID(t *testing.T) {
 	assert.NoError(t, err, "expected no error")
 
 	// Get Host 1
-	host, err := repo.GetHostByID(createdHost.ID)
+	retrievedHost, err := repo.GetHostByID(createdHost.ID)
 	assert.NoError(t, err, "expected no error")
-	assert.NotNil(t, host, "expected host to be retrieved")
-	assert.Equal(t, createdHost.ID, host.ID, "expected host to equal retrieved host")
+	assert.NotNil(t, retrievedHost, "expected host to be retrieved")
+	assert.Equal(t, createdHost.ID, retrievedHost.ID, "expected host to equal retrieved host")
 }
 
 func TestGetAllHosts(t *testing.T) {

@@ -2,6 +2,7 @@ package tests_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -26,7 +27,8 @@ func Test_Create_Meeting(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req, err := http.NewRequest("POST", "/api/meeting", bytes.NewBuffer(body))
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, "POST", "/api/meeting", bytes.NewBuffer(body))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,7 +49,8 @@ func Test_Create_Meeting(t *testing.T) {
 }
 
 func Test_Get_All_Meetings(t *testing.T) {
-	req, err := http.NewRequest("GET", "/api/meetings", nil)
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, "GET", "/api/meetings", http.NoBody)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +82,8 @@ func Test_Get_All_Meetings(t *testing.T) {
 }
 
 func Test_Get_Meeting_By_ID(t *testing.T) {
-	req, err := http.NewRequest("GET", "/api/meeting/1", nil)
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, "GET", "/api/meeting/1", http.NoBody)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -100,7 +104,8 @@ func Test_Get_Meeting_By_ID(t *testing.T) {
 }
 
 func Test_Get_Available_Time_Blocks(t *testing.T) {
-	req, err := http.NewRequest("GET", "/api/meeting/time-slots/1?date=2023-01-02", nil)
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, "GET", "/api/meeting/time-slots/1?date=2023-01-02", http.NoBody)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -171,7 +176,9 @@ func Test_Update_Meeting_Time(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	req, err := http.NewRequest("PUT", "/api/meeting/schedule", bytes.NewBuffer(body))
+
+	ctx := context.Background()
+	req, err := http.NewRequestWithContext(ctx, "PUT", "/api/meeting/schedule", bytes.NewBuffer(body))
 	if err != nil {
 		t.Fatal(err)
 	}
