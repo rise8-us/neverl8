@@ -1,6 +1,6 @@
 # neverl8
 
-**neverl8** is a streamlined Go application utilizing the Go-Chi router, GORM ORM, showcasing calendar operations within a PostgreSQL environment. Designed for simplicity and efficiency, this project will serve as the essential scheduler for Rise8.
+**neverl8** is a streamlined Go application utilizing the Go-Chi router, GORM ORM, Postgres, and a Vue frontend utilizing Vuetify components. Designed for simplicity and efficiency, this project will serve as the essential scheduler for Rise8.
 
 ## Prerequisites
 
@@ -9,6 +9,7 @@ To get the most out of **neverl8**, please ensure you have the following install
 - **Go programming language** (version 1.16 or higher) for the backend logic.
 - **PostgreSQL database** for data persistence.
 - **Git** for version control and collaboration.
+- **Docker** for server hosting
 
 ## Installation
 
@@ -21,7 +22,7 @@ Follow these simple steps to get **neverl8** up and running on your machine:
 2. **Navigate to the project directory**.
 3. **Launch the application**:
    ```bash
-   go run main.go
+   docker-compose up --build
    ```
    Congratulations! The application should now be accessible at http://localhost:8080.
 
@@ -47,12 +48,24 @@ With these steps completed, pre-commit hooks will automatically execute on every
 **neverl8** also incorporates `golangci-lint` for enforcing Go best practices and code styles. To use `golangci-lint` in your development process:
 
 1. **Install golangci-lint** on your local machine. You can follow the [official golangci-lint installation instructions](https://golangci-lint.run/usage/install/).
-2. Once installed, you can run `golangci-lint run` in the project directory to analyze your code.
+2. Once installed, you can run `golangci-lint run` in the project backend directory to analyze your code.
+
+### Frontend
+
+**neverl8** utilizes Vue for its frontend.
+**To view and edit the frontend** navigate to the frontend folder from root and type:
+
+```bash
+npm install
+npm run serve
+```
 
 ## Testing
 
-**neverl8** embraces testing as a fundamental part of the development process. To run the unit tests and ensure your setup is correctly configured:
+**neverl8** embraces testing as a fundamental part of the development process. To run the unit & integration tests and ensure your setup is correctly configured:
+
 ```bash
 go test ./...
 ```
-This command triggers all the unit tests within the project, verifying the integrity and functionality of your code.
+
+This command triggers all the unit and integration tests within the project, verifying the integrity and functionality of your code.
